@@ -1,8 +1,9 @@
 import secrets
+import psycopg2
 
+
+conn = psycopg2.connect(database="HIC_db", user="postgres",
+                        password="359846Cb", host="localhost", port="5432")
 # !!ADD THIS FILE TO GIT IGNORE ONCE WE START USING DATABASE!!
 
 #This is where well do database connections
-
-
-SECRET_KEY = secrets.token_hex(16)
