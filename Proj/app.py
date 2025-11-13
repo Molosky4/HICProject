@@ -8,11 +8,7 @@ conn = config.conn
 
 # create a cursor
 cur = conn.cursor()
-# commit the changes
-conn.commit()
-# close the cursor and connection
-cur.close()
-conn.close()
+
 
 @app.route('/')
 def home():
