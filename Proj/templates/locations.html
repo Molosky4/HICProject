@@ -56,14 +56,23 @@
                     <p class="mt-5 fs-2 text-center">Results</p>
                 </div>
 
-                <div class="row g-0">
-                    <div class="col-sm-6 col-md-5.5">Location Name</div>
+                {% for loc in locations %}
+                <div class="row g-1 mt-3">
+                    <div class="col-sm-6 col-md-5.5">{{ loc.name }} , {{ loc.street }} , {{loc.city}}
+                        <br>
+                         <img src="{{ url_for('static', filename='images/' ~ loc.image) }}"
+                            alt="{{ loc.name }}"
+                            class="img-fluid"
+                            style="max-width: 300px; height: auto; border-radius: 8px;">
+                    </div>
                     <div class="col-6 col-md-6.5">Available Cars at Location</div>
                 </div>
-                <div class="row g-1 mt-5">
+                {% endfor %}
+
+                <!-- <div class="row g-1 mt-5">
                     <div class="col-sm-6 col-md-5.5">Location Name</div>
                     <div class="col-6 col-md-6.5">Available Cars at Location</div>
-                </div>
+                </div> -->
 
             </div>
 
