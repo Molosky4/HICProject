@@ -42,44 +42,31 @@
                 </div>
 
                 <div class="col-10">
-                    <form role="search">
-                        <input 
+                    <form id = "search-form" role="search" onsubmit="event.preventDefault();">
+                        <input id = "search-input"
                             class="form-control bg-dark-subtle"
                             style="--bs-bg-opacity:.55;" 
                             type="search" 
                             placeholder="Search By Locations"
+                            onkeyup="searchAndUpdate()"
                         >
                     </form>
                 </div>
 
                 <div class="col-10">
-                    <p class="mt-5 fs-2 text-center">Results</p>
+                <p class="mt-5 fs-2 text-center">Results</p>
                 </div>
 
-                {% for loc in locations %}
-                <div class="row g-1 mt-3">
-                    <div class="col-sm-6 col-md-5.5">{{ loc.name }} , {{ loc.street }} , {{loc.city}}
-                        <br>
-                         <img src="{{ url_for('static', filename='images/' ~ loc.image) }}"
-                            alt="{{ loc.name }}"
-                            class="img-fluid"
-                            style="max-width: 300px; height: auto; border-radius: 8px;">
-                    </div>
-                    <div class="col-6 col-md-6.5">Available Cars at Location</div>
+                <div class = "col-10" id="results-container"> 
+                    {% include 'location_results.html' %} 
                 </div>
-                {% endfor %}
-
-                <!-- <div class="row g-1 mt-5">
-                    <div class="col-sm-6 col-md-5.5">Location Name</div>
-                    <div class="col-6 col-md-6.5">Available Cars at Location</div>
-                </div> -->
-
             </div>
 
          </div>
 
     </div>
 
+    <script src="{{ url_for('static', filename='js/locationSearch.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 </body>

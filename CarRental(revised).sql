@@ -35,8 +35,8 @@ CREATE TABLE "Locations" (
     "phone_number" VARCHAR(15),
     "location_image" VARCHAR(255), -- store image associated with location
     "days_open" VARCHAR(255),
-    "open_time" INTEGER,
-    "close_time" INTEGER
+    "open_time" TIME,
+    "close_time" TIME
 );
 
 CREATE TABLE "Cars" (
