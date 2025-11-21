@@ -4,8 +4,15 @@ from config import get_connection
 #DB connection from config
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home():
+
+    if request.method == 'POST':
+
+        rev = request.form.get('reviewSubmit')
+
+        return render_template('index.html')    
+
     return render_template('index.html')
 
 @app.route('/locations', methods=['GET'])
