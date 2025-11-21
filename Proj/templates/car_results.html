@@ -58,20 +58,22 @@
                 </div>
 
 
-                <div class = "col-10" id="results-container"> 
-                    <div class="container text-center">
+                <div class = "col-10 mt-4" id="results-container"> 
+                    <div class="container text-end">
                         {% for car in carsAtLocation %}
                         <div class="row mb-4">
-                            <div class="col"><img src="{{ url_for('static', filename='images/' + car.model + '.jpg') }}" 
+                            <div class="col text-center"> <strong> {{car.year}} {{ car.model }} </strong> <img src="{{ url_for('static', filename='images/' + car.model + '.jpg') }}" 
                             alt="{{ car.model }}" 
                             class="img-fluid" 
                             style="max-height: 150px;"> </div>
-                            <div class="col"> <img src="{{ url_for('static', filename='images/seat.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;"> {{car.seats}} <br>
-                            <img src="{{ url_for('static', filename='images/transmission.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;">{{car.transmission}} </div>
-                            <div class="col"><img src="{{ url_for('static', filename='images/transmission.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;"> {{car.rate}} <br> 
+                            <div class="col mt-3"> 
+                                <div class="col mt-3">  <img src="{{ url_for('static', filename='images/seat.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;"> {{car.seats}} </div>
+                                <div class="col mt-3">  <img src="{{ url_for('static', filename='images/transmission.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;"> {{car.transmission}} </div>
+                             </div>
+                            <div class="col mt-3"><img src="{{ url_for('static', filename='images/dollar-sign.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;">{{car.rate}}  / day <br> 
                             features</div>
 
-                            <div class="col"><img src="{{ url_for('static', filename='images/rentbutton.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 25px;"> <br> {{car.status}} </div>
+                            <div class="col"><img src="{{ url_for('static', filename='images/rent-button.jpg') }}" alt="{{ car.seats }}" class="img-fluid" style="max-height: 75px;"> <br> status: <i>{{car.status}}</i> </div>
                         </div>
                         {% endfor %}
                     </div>
