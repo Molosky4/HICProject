@@ -1,4 +1,5 @@
- <!-- prints location search results -->
+
+<!-- prints location search results -->
 {% for loc in locations %}
     <div class="row g-1 mt-3">
         <div class="col-sm-6 col-md-6 text-start">{{ loc.name }} at {{ loc.street }} , {{loc.city}}
@@ -8,7 +9,7 @@
             {{loc.opens}} - {{loc.closes}}
         </div>
         <div class="col-6 col-md-6">
-            <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('cars_at_location', location_id=loc.id) }}">Available Cars At Location</a>
+            <p><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{{ url_for('cars_at_location', location_id=loc.id) }}">Available Cars At Location</a></p>
         </div>
     </div>
 {% endfor %}
