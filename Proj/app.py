@@ -14,8 +14,15 @@ conn.commit()
 cur.close()
 conn.close()
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home():
+
+    if request.method == 'POST':
+
+        rev = request.form.get('reviewSubmit')
+
+        return render_template('index.html')    
+
     return render_template('index.html')
 
 if __name__ == '__main__':
