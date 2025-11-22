@@ -32,34 +32,34 @@
     </div>
 
     <!--ACTUAL body, still needs styling-->
-    <div class="container" style="margin-top: 25vh">
-        <div style="--bs-bg-opacity:.1;">
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="margin-top: 10vh; margin-bottom: 15vh">
+        <div class= "d-flex border border-secondary-subtle justify-content-center align-items-center flex-column rounded-1 text-center" style=" width:90%; --bs-bg-opacity:.9; background-color: #525252;">
             
             <!-- add grey tint over background-->
-            <div class="row position-absolute justify-content-center w-75 bg-dark-subtle p-4 text-center" style="right:0; left:0; margin:auto; --bs-bg-opacity:.01;">
-                <div class="col-10">
-                    <p class="fs-1 text-center">Find A Location</p>
+            <div class="col-10">
+                 <div class="mx-auto" style="width:75%">
+                    <h4 class="d-inline-block my-5 border-bottom border-secondary text-center rounded-1" style="font-size:4rem">Find a Location</h4>
                 </div>
+            </div>
 
-                <div class="col-10">
-                    <form id = "search-form" role="search" onsubmit="event.preventDefault();">
-                        <input id = "search-input"
-                            class="form-control bg-dark-subtle"
-                            style="--bs-bg-opacity:.55;" 
-                            type="search" 
-                            placeholder="Search By Locations"
-                            onkeyup="searchAndUpdate()"
-                        >
-                    </form>
-                </div>
+            <div class="col-10">
+                <form id = "search-form" role="search" onsubmit="event.preventDefault();">
+                    <input id = "search-input"
+                        class="form-control bg-dark-subtle"
+                        style="--bs-bg-opacity:.55;" 
+                        type="search" 
+                        placeholder="Search By Locations"
+                        onkeyup="searchAndUpdate()"
+                    >
+                </form>
+            </div>
 
-                <div class="col-10">
-                <p class="mt-5 fs-2 text-center">Results</p>
-                </div>
+            <div class="col-10">
+            <p class="mt-1 fs-2 text-center"><i>Results</i></p>
+            </div>
 
-                <div class = "col-10" id="results-container"> 
-                    {% include 'location_results.html' %} 
-                </div>
+            <div class = "col-10" id="results-container"> 
+                {% include 'location_results.html' %} 
             </div>
 
          </div>

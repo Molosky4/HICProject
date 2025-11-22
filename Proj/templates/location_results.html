@@ -2,14 +2,17 @@
 <!-- prints location search results -->
 {% for loc in locations %}
     <div class="row g-1 mt-3">
-        <div class="col-sm-6 col-md-6 text-start">{{ loc.name }} at {{ loc.street }} , {{loc.city}}
+        <div class="col-sm-6 col-md-6 text-start" > <b style="font-size:1.25rem"> {{ loc.name }} at {{ loc.street }} , {{loc.city}} </b>
             <br>
             <b> Hours Of Operation: </b> <br>
             {{loc.days_open}} <br>
             {{loc.opens}} - {{loc.closes}}
         </div>
-        <div class="col-6 col-md-6">
-            <p><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{{ url_for('cars_at_location', location_id=loc.id) }}">Available Cars At Location</a></p>
+        <div class="col-6 col-md-6 text-end">
+            <p><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="font-size:1.1rem" href="{{ url_for('cars_at_location', location_id=loc.id) }}">Available Cars At This Location</a></p>
         </div>
+
+        <hr class="mx-auto w-100 my-5" style="border-top: 3px solid #c9b500">
+
     </div>
 {% endfor %}
