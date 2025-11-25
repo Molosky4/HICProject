@@ -14,7 +14,7 @@
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
                     <nav class="nav nav-pills flex-column flex-sm-row">
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="#">Specials</a>
                     </nav>
@@ -24,8 +24,9 @@
 
         <!-- Search Bar Container: Pushed to the Right -->
         <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto">
-            <form class="d-flex" role="search">
-                <input style=" background-color: #525252;"class="form-control me-2" style="--bs-bg-opacity:.55;" type="search" placeholder="Search By Locations" aria-label="Search"/>
+            <form class="d-flex" method = "POST" role="search">
+                <input type="hidden" name="ac" value="sch">
+                <input class="form-control me-2 bg-dark-subtle" name="l" style="--bs-bg-opacity:.55;" type="search" placeholder="Search By Locations" aria-label="Search"/>
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -98,12 +99,12 @@
                     <div class="mx-3">
                         <h4 class="fs-1">Don't know what you want?</h4>
                         <p>Our catalog is sure to have something for every occasion. Finding a car has never been easier!</p>
-                        <button class="btn btn-primary" style="font-size: 1.2rem">Find it Here</button>
+                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('search_cars') }}'">Find it Here</button>
                     </div>
                     <div class="mx-5">
                         <h4 class="fs-1">Want to see where we are?</h4>
                         <p>We're expanding by the week! See if your hometown or travel destination has one of our galleries.</p>
-                        <button class="btn btn-primary" style="font-size: 1.2rem">Search your Location</button>
+                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('locations') }}'">Search your Location</button>
                     </div>
                 </div>
 
@@ -155,6 +156,7 @@
                             </div>
                             <div class="modal-body" style="border-bottom: 2px solid #c9b500;">
                                 <form class="form d-flex justify-content-start" action="/" method="POST" id="reviewSubmitForm">
+                                    <input type="hidden" name="ac" value="rev">
                                     <textarea required class="my-textarea w-100" 
                                             name="reviewSubmit"
                                             style="height: 20vmax; background-color:#525252; color:white;" 

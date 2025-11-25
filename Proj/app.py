@@ -9,14 +9,24 @@ def home():
 
     if request.method == 'POST':
 
-        rev = request.form.get('reviewSubmit')
+        ac = request.form.get('ac')
+        
+        if ac == "rev":
+            rev = request.form.get('reviewSubmit')
+        
+        if ac == "sch":
+            l = request.form.get('l')
+            return redirect(url_for('locations', l = l))
 
         return render_template('index.html')    
 
     return render_template('index.html')
 
+
 @app.route('/locations', methods=['GET'])
 def locations():
+    l = request.args.get('l')
+    
     conn = get_connection()
     cur = conn.cursor()
 
@@ -32,7 +42,7 @@ def locations():
         for r in rows
     ]
 
-    return render_template('locations.html', locations=locations)
+    return render_template('locations.html', locations=locations, l=l)
 
 @app.route('/search_locations', methods=['GET'])
 def search_locations():

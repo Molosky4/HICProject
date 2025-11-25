@@ -15,7 +15,7 @@
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
                     <nav class="nav nav-pills flex-column flex-sm-row">
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('home') }}">Home</a>
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="#">Locations</a>
+                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('home') }}">Locations</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="#">Specials</a>
                     </nav>
                 </div>
@@ -49,6 +49,7 @@
                         style="--bs-bg-opacity:.55;" 
                         type="search" 
                         placeholder="Search By Locations"
+                        value = "{{ l if l is not none else '' }}"
                         onkeyup="searchAndUpdate()"
                     >
                 </form>

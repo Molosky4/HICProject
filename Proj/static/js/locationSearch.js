@@ -26,3 +26,12 @@ function searchAndUpdate(){
             resultsContainer.innerHTML = '<p class="text-danger mt-4">Could not load results. Please try again.</p>';
         });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    
+    // Check if the search input has a value (i.e., a query is present)
+    if (searchInput && searchInput.value) {
+        searchAndUpdate();  // Trigger the search if the value is present
+    }
+});
