@@ -1,5 +1,6 @@
 from flask import Flask, flash, redirect, render_template, request, jsonify, url_for, session
 from config import get_connection
+import datetime
 
 #DB connection from config
 app = Flask(__name__)
@@ -135,7 +136,99 @@ def search_cars():
 
     # 4. Render only the partial HTML template with the filtered results
     # You MUST create a separate template file named 'location_results_partial.html'
-    return render_template('car_results.html', carsAtLocation=filtered_cars)                
+    return render_template('car_results.html', carsAtLocation=filtered_cars)
+
+# --- MY ACCOUNT PAGE ROUTE ---
+@app.route('/my_account', methods=['GET'])
+def my_account():
+    # Since "no login is required" for the project, we simulate User ID 1 is logged in
+    user_id = 1 
+    
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # 1. Fetch User Information
+    cur.execute('SELECT first_name, last_name, email, phone FROM "Users" WHERE user_id = %s', (user_id,))
+    user_data = cur.fetchone()
+    
+    if user_data:
+        user = {
+            "first_name": user_data[0],
+            "last_name": user_data[1],
+            "email": user_data[2],
+            "phone": user_data[3]
+        }
+    else:
+        user = None
+
+    # 2. Fetch Rental History (Joins Rentals with Cars to show what they rented)
+    cur.execute("""
+        SELECT r.rental_date, c.make, c.model, r.total_cost 
+        FROM "Rentals" r
+        JOIN "Cars" c ON r.car_id = c.car_id
+        WHERE r.user_id = %s
+        ORDER BY r.rental_date DESC
+    """, (user_id,))
+    
+    history_rows = cur.fetchall()
+    
+    history = [
+        {"date": row[0], "car": f"{row[1]} {row[2]}", "cost": row[3]} 
+        for row in history_rows
+    ]
+
+    cur.close()
+    conn.close()
+
+    return render_template('my_account.html', user=user, history=history)
+
+
+# --- PURCHASE PAGE ROUTE ---
+@app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
+def purchase(car_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # GET: Display the car details and the purchase form
+    if request.method == 'GET':
+        cur.execute('SELECT car_id, make, model, year, daily_rate, transmission, "MPG" FROM "Cars" WHERE car_id = %s', (car_id,))
+        car_data = cur.fetchone()
+        
+        cur.close()
+        conn.close()
+
+        if car_data:
+            car = {
+                "id": car_data[0], "make": car_data[1], "model": car_data[2],
+                "year": car_data[3], "rate": car_data[4], "transmission": car_data[5], "mpg": car_data[6]
+            }
+            return render_template('purchase.html', car=car)
+        else:
+            return "Car not found", 404
+
+    # POST: Process the "Payment"
+    if request.method == 'POST':
+        user_id = 1  # Simulated logged-in user
+        total_cost = request.form.get('total_cost')
+        
+        # Insert the rental record
+        try:
+            cur.execute("""
+                INSERT INTO "Rentals" (user_id, car_id, total_cost)
+                VALUES (%s, %s, %s)
+            """, (user_id, car_id, total_cost))
+            conn.commit()
+            flash("Booking confirmed! Thank you for your purchase.")
+        except Exception as e:
+            conn.rollback()
+            flash("An error occurred during processing.")
+            print(e)
+        finally:
+            cur.close()
+            conn.close()
+
+        # Redirect to My Account to show the Golden Rule: "Design dialogue to yield closure"
+        return redirect(url_for('my_account'))             
 
 if __name__ == '__main__':
     app.run()

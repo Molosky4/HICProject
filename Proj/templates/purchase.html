@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Purchase</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f9f9f9; }
+        .checkout-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .car-summary { background-color: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 8px; box-sizing: border-box; }
+        .total-section { font-size: 1.5em; font-weight: bold; color: #28a745; margin: 20px 0; }
+        .btn-confirm { background-color: #28a745; color: white; padding: 15px; width: 100%; border: none; font-size: 1.1em; cursor: pointer; border-radius: 5px; }
+        .btn-confirm:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="checkout-container">
+    <h1>Review & Purchase</h1>
+    
+    <div class="car-summary">
+        <h3>{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+        <p>Transmission: {{ car.transmission }} | MPG: {{ car.mpg }}</p>
+        <p>Daily Rate: $<span id="daily-rate">{{ car.rate }}</span></p>
+    </div>
+
+    <form action="{{ url_for('purchase', car_id=car.id) }}" method="POST">
+        
+        <div class="form-group">
+            <label for="days">Number of Days:</label>
+            <input type="number" id="days" name="days" value="1" min="1" max="30" onchange="calculateTotal()" required>
+        </div>
+
+        <div class="form-group">
+            <label for="card_name">Name on Card:</label>
+            <input type="text" id="card_name" placeholder="John Doe" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="card_number">Card Number (Simulated):</label>
+            <input type="text" id="card_number" placeholder="0000 0000 0000 0000" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+                <label>Exp Date:</label>
+                <input type="text" placeholder="MM/YY" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>CVV:</label>
+                <input type="text" placeholder="123" required>
+            </div>
+        </div>
+
+        <input type="hidden" id="total_cost_input" name="total_cost" value="{{ car.rate }}">
+
+        <div class="total-section">
+            Total: $<span id="display-total">{{ car.rate }}</span>
+        </div>
+
+        <button type="submit" class="btn-confirm">Confirm Booking</button>
+        <br><br>
+        <a href="{{ url_for('home') }}" style="text-decoration: none; color: #666;">Cancel</a>
+    </form>
+</div>
+
+<script>
+    function calculateTotal() {
+        // Get the rate and days
+        const rate = parseFloat(document.getElementById('daily-rate').innerText);
+        const days = parseInt(document.getElementById('days').value);
+        
+        // Calculate total
+        const total = (rate * days).toFixed(2);
+        
+        // Update display and hidden input
+        document.getElementById('display-total').innerText = total;
+        document.getElementById('total_cost_input').value = total;
+    }
+</script>
+
+</body>
+</html>
