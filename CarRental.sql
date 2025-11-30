@@ -43,16 +43,16 @@ CREATE TABLE "Reviews" (
 
 CREATE TABLE "Locations" (
     "location_id" INTEGER PRIMARY KEY,
-    "location_name" VARCHAR(50),
+    "name" VARCHAR(50),
     "street" VARCHAR(50),
     "city" VARCHAR(30),
     "state" VARCHAR(20),
-    "postal_code" VARCHAR(7),
-    "phone_number" VARCHAR(15),
-    "location_image" VARCHAR(255), -- store image associated with location
+    "zip" VARCHAR(7),
+    "phone" VARCHAR(15),
+    "image_file" VARCHAR(255), -- store image associated with location
     "days_open" VARCHAR(255),
-    "open_time" TIME,
-    "close_time" TIME
+    "opens" TIME,
+    "closes" TIME
 );
 
 CREATE TABLE "Cars" (
