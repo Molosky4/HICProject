@@ -7,7 +7,7 @@
     
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/customCss.css">
-    <link rel="icon" type="image/png" href="../static/images/favicon.png">
+    <link rel="stylesheet" href="../static/css/pages.css">
 </head>
 
 <body class="background-container">
@@ -34,13 +34,11 @@
         </div>
     </div>
 
-    <div class="container-fluid d-flex justify-content-center align-items-center" style="margin-top: 15vh; margin-bottom: 5vh">
-        
-        <div class="d-flex border border-secondary-subtle justify-content-center align-items-center flex-column rounded-1 text-center" 
-             style="width:90%; --bs-bg-opacity:.9; background-color: #525252; color:white; padding: 20px;">
+    <div class="container-fluid" style="margin-top: 150px; padding-bottom: 50px;">
+        <div class="col-md-10 mx-auto">
             
-            <div class="mx-auto" style="width:75%">
-                <h3 class="my-5 border-bottom border-secondary text-center rounded-1" style="font-size:4rem">My Account</h3>
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-5">My Account</h2>
                 <h4 class="text-warning">Welcome back, {{ user.first_name }}!</h4>
             </div>
 
