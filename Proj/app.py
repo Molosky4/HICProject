@@ -1,3 +1,4 @@
+import secrets
 from flask import Flask, flash, redirect, render_template, request, jsonify, url_for, session
 from config import get_connection
 import datetime # For handling dates
@@ -6,6 +7,9 @@ import random # For generating random reservation IDs
 #DB connection from config
 app = Flask(__name__)
 app.secret_key = 'super_secret_key' # Needed for flash messages
+
+def check_password_hash(password_hash, password):
+    raise NotImplementedError
 
 # -------------------------------------------------------------------------
 # AUTHENTICATION ROUTES
@@ -37,6 +41,9 @@ def login():
             flash('Invalid email or password', 'error')
             
     return render_template('login.html')
+
+def generate_password_hash(password):
+    raise NotImplementedError
 
 @app.route('/create_account', methods=['GET', 'POST'])
 def create_account():
