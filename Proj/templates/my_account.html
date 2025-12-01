@@ -162,13 +162,9 @@
                                 </div>
                                 
                                 <div class="col-md-4">
-                                    <button class="action-btn">Modify</button>
-                                    
                                     <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
                                         <button type="submit" class="action-btn cancel-btn" onclick="return confirm('Cancel this reservation?');">Cancel</button>
                                     </form>
-                                    
-                                    <button class="action-btn">Get Directions</button>
                                 </div>
                             </div>
                         </div>
