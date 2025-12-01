@@ -111,13 +111,25 @@ def cars_at_location(location_id):
     cur.close()
     conn.close()
 
+    # FIXED: Changed "id" to "car_id" to match the HTML template
     carsAtLocation = [
-         {"id": car[0], "make": car[1], "model": car[2], "year": car[3], "rate":car[4], "transmission": car[5],
-           "seats": car[6], "MPG":car[7], "special": car[8], "status": car[9]}
+         {
+             "car_id": car[0],
+             "make": car[1], 
+             "model": car[2], 
+             "year": car[3], 
+             "rate": car[4], 
+             "transmission": car[5],
+             "seats": car[6], 
+             "MPG": car[7], 
+             "special": car[8], 
+             "status": car[9]
+         }
         for car in cars
     ]
 
-    return render_template("cars.html", carsAtLocation=carsAtLocation, location_id=location_id) 
+    return render_template("cars.html", carsAtLocation=carsAtLocation, location_id=location_id)
+
 
 # Search Cars within a Location
 @app.route('/search_cars', methods=['GET'])
@@ -128,7 +140,6 @@ def search_cars():
     conn = get_connection()
     cur = conn.cursor()
     
-    # If location_id is provided, filter by it, otherwise search all (optional safety check)
     if location_id:
         cur.execute("""
             SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status 
@@ -136,7 +147,6 @@ def search_cars():
             WHERE location_id = %s;
         """, (location_id,))
     else:
-        # Fallback if no location selected (prevents crash)
         cur.execute("""
             SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status 
             FROM "Cars";
@@ -146,9 +156,20 @@ def search_cars():
     cur.close()
     conn.close()
     
+    # FIX: Changed "id" to "car_id" here as well
     cars_list = [
-         {"id": car[0], "make": car[1], "model": car[2], "year": car[3], "rate":car[4], "transmission": car[5],
-           "seats": car[6], "MPG":car[7], "special": car[8], "status": car[9]}
+         {
+             "car_id": car[0], # <--- CHANGED FROM "id"
+             "make": car[1], 
+             "model": car[2], 
+             "year": car[3], 
+             "rate": car[4], 
+             "transmission": car[5],
+             "seats": car[6], 
+             "MPG": car[7], 
+             "special": car[8], 
+             "status": car[9]
+         }
         for car in cars
     ]
 
