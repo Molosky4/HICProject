@@ -27,15 +27,18 @@
 </head>
 <body class="background-container">
 
-    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
-        <div class="d-flex position-absolute justify-content-center w-75" style="right:0; left:0; margin:auto"> 
+    <!-- position of NavBar -->
+    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;"></div>
+    <!-- Navbar Container: Centered -->
+        <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto"> <!-- Adjust width as needed -->
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
                     <nav class="nav nav-pills flex-column flex-sm-row">
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('home') }}">Home</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
-                        <a class="flex-sm-fill text-sm-center nav-link" href="#">Specials</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
                         <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('my_account') }}">My Account</a>
+
                     </nav>
                 </div>
             </div>
