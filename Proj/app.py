@@ -1,4 +1,4 @@
-import secrets
+`import secrets
 from flask import Flask, flash, redirect, render_template, request, jsonify, url_for, session
 from config import get_connection
 import datetime 
@@ -336,6 +336,65 @@ def my_account():
 # Purchase Page
 # -------------------------------------------------------------------------
 
+@app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
+def purchase(car_id):
+    if 'user_id' not in session:
+        flash("Please log in to reserve a car.")
+        return redirect(url_for('login'))
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    if request.method == 'GET':
+        cur.execute("""
+            SELECT car_id, make, model, year, daily_rate, transmission, "MPG", location_id 
+            FROM "Cars" 
+            WHERE car_id = %s
+        """, (car_id,))
+        car_data = cur.fetchone()
+        
+        cur.close()
+        conn.close()
+
+        if car_data:
+            car = {
+                "id": car_data[0], "make": car_data[1], "model": car_data[2],
+                "year": car_data[3], "rate": car_data[4], "transmission": car_data[5], 
+                "mpg": car_data[6], "location_id": car_data[7]
+            }
+            return render_template('purchase.html', car=car)
+        else:
+            return "Car not found", 404
+
+    if request.method == 'POST':
+        user_id = session['user_id']
+        
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        total_cost = request.form.get('total_cost')
+        location_id = request.form.get('location_id')
+        
+        res_id = random.randint(10000, 99999) 
+        payment_id = 1 # Placeholder for payment ID
+
+        try:
+            cur.execute("""
+                INSERT INTO "Reservations" 
+                (reservation_id, user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
+            """, (res_id, user_id, car_id, location_id, location_id, payment_id, start_date, end_date, total_cost))
+            
+            conn.commit()
+            flash("Booking confirmed successfully!")
+            return redirect(url_for('my_account'))
+            
+        except Exception as e:
+            conn.rollback()
+            print(f"Error: {e}")
+            return f"An error occurred: {e}"
+        finally:
+            cur.close()
+            conn.close()
 
 # Cancel Reservation
 # -------------------------------------------------------------------------
