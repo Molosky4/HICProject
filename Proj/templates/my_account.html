@@ -62,7 +62,7 @@
                             </div>
                             
                             <div class="col-md-4 text-end">
-                                <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
+                                <form action="{{ url_for('cancel_reservation', reservation_id=item.reservation_id) }}" method="POST">
                                     <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Cancel this reservation?');">Cancel Reservation</button>
                                 </form>
                             </div>
