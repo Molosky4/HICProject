@@ -31,10 +31,12 @@ VALUES
 (2, 2, '6427 Hickory Ln', 'San Francisco', 'California', '42346', 'USA');
 
 -- Insert Paymentinfo
-INSERT INTO "PaymentInfo" ("payment_id", "user_id", "card_number", "card_holder_name", "expiration_date", "billing_address")
-VALUES
-(1, 1, '1111222233334444', 'John Doe', '2025-12-31', '123 Main St, Cleveland'),
-(2, 2, '5555666677778888', 'Jane Smith', '2025-12-31', '6427 Hickory Ln, San Francisco');
+INSERT INTO "PaymentInfo" ("payment_id", "user_id", "card_number", "card_holder_name", "expiration_date", "billing_address", "payment_type") 
+VALUES 
+(1, 1, '1111222233334444', 'John Doe', '2025-12-31', '123 Main St, Cleveland', 'Credit Card'),
+(2, 2, '5555666677778888', 'Jane Smith', '2025-12-31', '6427 Hickory Ln, San Francisco', 'Debit Card');
+
+
 
 -- Insert Reservations (after Users, Cars, Locations, PaymentInfo)
 INSERT INTO "Reservations" ("reservation_id", "user_id", "car_id", "pickup_location", "dropoff_location", "payment_id", "pick_up_date", "drop_off_date", "total_cost", "status")
