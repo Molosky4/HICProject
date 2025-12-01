@@ -29,7 +29,7 @@
                 <a href="{{ url_for('login') }}" class="btn btn-primary me-2">Login</a>
                 <a href="{{ url_for('create_account') }}" class="btn btn-primary">Sign Up</a>
                 <a href="{{ url_for('my_account') }}" class="btn btn-primary">My Account</a>
-                <a href="{{ url_for('purchase') }}" class="btn btn-primary">Buy</a>
+                <a href="{{ url_for('purchase', car_id=101) }}" class="btn btn-primary">Buy</a>
             </div>
             <form class="d-flex" method = "POST" role="search">
                 <input type="hidden" name="ac" value="sch">
