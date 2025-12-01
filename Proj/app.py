@@ -7,7 +7,7 @@ import random # For generating random reservation IDs
 app = Flask(__name__)
 app.secret_key = 'super_secret_key' # Needed for flash messages
 
-CURRENT_USER_ID = 3 # Hardcoded user ID for demo purposes, should chage once login logic is implemented
+CURRENT_USER_ID = 2 # Hardcoded user ID for demo purposes, should chage once login logic is implemented
 # -------------------------------------------------------------------------
 
 
