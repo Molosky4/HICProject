@@ -199,10 +199,10 @@ def cars_at_location(location_id):
     cur.close()
     conn.close()
 
-    # FIXED: Changed "id" to "car_id" to match the HTML template
     carsAtLocation = [
          {
-             "car_id": car[0],
+             "id": car[0],      # <--- Added this for car_results.html
+             "car_id": car[0],  # <--- Kept this for purchase.html
              "make": car[1], 
              "model": car[2], 
              "year": car[3], 
@@ -244,12 +244,12 @@ def search_cars():
     cur.close()
     conn.close()
     
-    # FIXED: Changed "id" to "car_id" here as well
     cars_list = [
          {
-             "car_id": car[0],
-             "make": car[1], 
-             "model": car[2], 
+             "id": car[0],      # <--- Added this for car_results.html
+             "car_id": car[0], # <--- Kept this for purchase.html
+             "make": car[1],
+             "model": car[2],
              "year": car[3], 
              "rate": car[4], 
              "transmission": car[5],
