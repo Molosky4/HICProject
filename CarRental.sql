@@ -31,6 +31,10 @@ CREATE TABLE "PaymentInfo"(
 ALTER TABLE
     "PaymentInfo" ADD PRIMARY KEY("payment_id");
 
+ALTER TABLE "PaymentInfo"
+ADD COLUMN "payment_type" VARCHAR(50) NULL;
+
+
 CREATE TABLE "Reviews" (
     "review_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
