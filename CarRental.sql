@@ -103,5 +103,5 @@ ALTER TABLE "Addresses"
     ADD CONSTRAINT "addresses_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
 
 ALTER TABLE "PaymentInfo" 
-    ADD CONSTRAINT "paymentinfo_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
+    ADD CONSTRAINT "PaymentInfo_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
 
