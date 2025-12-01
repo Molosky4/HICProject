@@ -7,13 +7,11 @@
     
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/customCss.css">
-    <link rel="icon" type="image/png" href="../static/images/favicon.png">
 </head>
 
 <body class="background-container">
 
     <div class="d-flex align-items-center position-fixed w-100" style="top: 30px; z-index: 10;">
-        
         <div class="d-flex position-absolute justify-content-center w-75" style="right:0; left:0; margin:auto"> 
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
@@ -36,6 +34,14 @@
             <div class="mx-auto" style="width:75%">
                 <h4 class="my-5 border-bottom border-secondary text-center rounded-1" style="font-size:4rem">Review & Purchase</h4>
             </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-danger w-50" role="alert">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
             <div class="row w-100 justify-content-center px-4 mb-5">
             
@@ -61,7 +67,7 @@
                     <div class="content-card h-100 text-start">
                         <h4 class="mb-4 border-bottom border-warning pb-2">Reservation Details</h4>
                         
-                        <form action="{{ url_for('purchase', car_id=car.id) }}" method="POST">
+                        <form action="{{ url_for('purchase', car_id=car.car_id) }}" method="POST">
                             <input type="hidden" name="location_id" value="{{ car.location_id }}">
                             
                             <div class="row mb-3">
@@ -79,42 +85,42 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="Meheraj" required>
+                                    <input type="text" name="first_name" class="form-control bg-secondary text-white border-warning" placeholder="Meheraj" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="Khatri" required>
+                                    <input type="text" name="last_name" class="form-control bg-secondary text-white border-warning" placeholder="Khatri" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control bg-secondary text-white border-warning" placeholder="hicproject@cs.com" required>
+                                <input type="email" name="email" class="form-control bg-secondary text-white border-warning" placeholder="hicproject@cs.com" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control bg-secondary text-white border-warning" placeholder="(123) 890-4567" required>
+                                <input type="tel" name="phone" class="form-control bg-secondary text-white border-warning" placeholder="(123) 890-4567" required>
                             </div>
 
                             <h5 class="mt-4 mb-3 text-warning border-bottom border-secondary pb-1">Payment Information</h5>
                             
                             <div class="mb-3">
                                 <label class="form-label">Card Number</label>
-                                <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="0000 0000 0000 0000" required>
+                                <input type="text" name="card_number" class="form-control bg-secondary text-white border-warning" placeholder="0000 0000 0000 0000" required>
                             </div>
                             <div class="row mb-4">
                                 <div class="col-6">
                                     <label class="form-label">Expiration Date</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="MM/YY" required>
+                                    <input type="text" name="expiry" class="form-control bg-secondary text-white border-warning" placeholder="MM/YY" required>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">CVV</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="123" required>
+                                    <input type="text" name="cvv" class="form-control bg-secondary text-white border-warning" placeholder="123" required>
                                 </div>
                             </div>
 
                             <h5 class="mt-4 mb-2 text-warning border-bottom border-secondary pb-1">Cancellation Policy</h5>
                             <p class="small text-light mb-3">
-                                <em>Free cancellation is available up to 24 hours before your pick-up time. Cancellations made within 24 hours may be subject to a fee equal to 1 day's rental rate. No refunds are issued for early returns.</em>
+                                <em>Free cancellation is available up to 24 hours before your pick-up time.</em>
                             </p>
 
                             <div class="d-flex justify-content-between align-items-center p-3 mb-4 rounded" style="background-color: #343a40; border: 2px solid #ffc107;">
@@ -137,6 +143,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="text-center account-footer mt-5">
                 <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com</p>
             </div>
@@ -144,35 +151,26 @@
     </div>
 
     <script>
-        // Function to calculate total cost based on date difference
         function calculateTotal() {
-            // Get values from input fields
             const startInput = document.getElementById('start_date').value;
             const endInput = document.getElementById('end_date').value;
-            // Parse daily rate from the HTML text (removes $)
             const rate = parseFloat(document.getElementById('daily-rate').innerText);
 
-            // Only run calculation if both dates are selected
             if (startInput && endInput) {
                 const start = new Date(startInput);
                 const end = new Date(endInput);
                 
-                // GOLDEN RULE: Simple Error Handling
-                // Check if user accidentally picked a drop-off date before pick-up
                 if (end <= start) {
                     alert("The Drop-off date must be AFTER the Pick-up date.");
-                    document.getElementById('end_date').value = ""; // Clear invalid date
+                    document.getElementById('end_date').value = ""; 
                     document.getElementById('display-total').innerText = "0.00";
                     document.getElementById('total_cost').value = "0";
                     return;
                 }
 
-                // Calculate time difference in milliseconds
                 const diffTime = end - start;
-                // Convert to days (1000ms * 60s * 60m * 24h)
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-                // Update the Display and Hidden Input
                 if (diffDays > 0) {
                     const total = (diffDays * rate).toFixed(2);
                     document.getElementById('display-total').innerText = total;
@@ -181,10 +179,6 @@
                     document.getElementById('display-total').innerText = "0.00";
                     document.getElementById('total_cost').value = "0";
                 }
-            } else {
-                 // Reset to 0 if dates are cleared
-                 document.getElementById('display-total').innerText = "0.00";
-                 document.getElementById('total_cost').value = "0";
             }
         }
     </script>

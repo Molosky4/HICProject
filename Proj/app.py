@@ -153,145 +153,134 @@ def search_cars():
 
     return render_template('car_results.html', carsAtLocation=filtered_cars)
 
+# Purchase Page
+# -------------------------------------------------------------------------
+@app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
+def purchase(car_id):
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    if request.method == 'POST':
+        # 1. Extract Form Data
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        total_cost = request.form['total_cost']
+        location_id = request.form['location_id']
+        
+        # 2. Insert into Reservations Table
+        # Note: We are using a dummy payment_id (1) for now to satisfy FK constraints 
+        # unless you want to implement the full PaymentInfo insertion logic here.
+        insert_query = """
+            INSERT INTO "Reservations" 
+            (user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
+        """
+        cur.execute(insert_query, (
+            CURRENT_USER_ID, 
+            car_id, 
+            location_id, 
+            location_id, # Assuming dropoff is same as pickup for now
+            1, # Hardcoded Payment ID (John Doe's existing card)
+            start_date, 
+            end_date, 
+            total_cost
+        ))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        flash("Reservation confirmed successfully!")
+        return redirect(url_for('my_account'))
+
+    # GET Request: Fetch Car Details
+    cur.execute('SELECT * FROM "Cars" WHERE car_id = %s', (car_id,))
+    car = cur.fetchone()
+    
+    cur.close()
+    conn.close()
+    
+    return render_template('purchase.html', car=car)
 
 # My Account Page
 # -------------------------------------------------------------------------
-
-@app.route('/my_account', methods=['GET'])
+@app.route('/my_account', methods=['GET', 'POST'])
 def my_account():
-    # Simulate a logged-in user (User ID 1 based on our SQL setup)
-    user_id = 1 
-    
-    conn = get_connection()
-    cur = conn.cursor()
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    # 1. Fetch User Information
-    cur.execute('SELECT full_name, email, phone_number FROM "Users" WHERE user_id = %s', (user_id,))
+    # POST: Update Personal Details
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        
+        # Reconstruct full name for DB
+        full_name = f"{first_name} {last_name}"
+        
+        cur.execute("""
+            UPDATE "Users" 
+            SET full_name = %s, email = %s, phone_number = %s
+            WHERE user_id = %s
+        """, (full_name, email, phone, CURRENT_USER_ID))
+        
+        conn.commit()
+        flash("Account details updated.")
+        return redirect(url_for('my_account'))
+
+    # GET: Fetch User & History
+    # 1. Get User Details
+    cur.execute('SELECT * FROM "Users" WHERE user_id = %s', (CURRENT_USER_ID,))
     user_data = cur.fetchone()
     
-    user = None
-    if user_data:
-        full_name_split = user_data[0].split(' ', 1)
-        first_name = full_name_split[0]
-        last_name = full_name_split[1] if len(full_name_split) > 1 else ""
-        
-        user = {
-            "first_name": first_name,
-            "last_name": last_name,
-            "email": user_data[1],
-            "phone": user_data[2]
-        }
+    # Split full_name for the template (since template uses first_name/last_name)
+    names = user_data['full_name'].split(' ', 1)
+    user_formatted = {
+        'first_name': names[0],
+        'last_name': names[1] if len(names) > 1 else '',
+        'email': user_data['email'],
+        'phone': user_data['phone_number']
+    }
 
-    # 2. Fetch Reservation History (Added reservation_id to select for cancellation)
-    cur.execute("""
-        SELECT r.reservation_id, r.pick_up_date, c.year, c.make, c.model, r.total_cost, r.status
+    # 2. Get Reservation History (Join with Cars to get Model Name)
+    history_query = """
+        SELECT r.reservation_id as id, 
+               CONCAT(c.year, ' ', c.make, ' ', c.model) as car,
+               r.pick_up_date as date,
+               r.total_cost as cost,
+               r.status
         FROM "Reservations" r
         JOIN "Cars" c ON r.car_id = c.car_id
         WHERE r.user_id = %s
         ORDER BY r.pick_up_date DESC
-    """, (user_id,))
-    
-    rows = cur.fetchall()
-    
-    history = [
-        {
-            "id": row[0],
-            "date": row[1], 
-            "car": f"{row[2]} {row[3]} {row[4]}", 
-            "cost": row[5], 
-            "status": row[6]
-        } 
-        for row in rows
-    ]
+    """
+    cur.execute(history_query, (CURRENT_USER_ID,))
+    history = cur.fetchall()
 
     cur.close()
     conn.close()
+    
+    return render_template('my_account.html', user=user_formatted, history=history)
 
-    return render_template('my_account.html', user=user, history=history)
-
-# Purchase Page
-# -------------------------------------------------------------------------
-
-@app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
-def purchase(car_id):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    if request.method == 'GET':
-        cur.execute("""
-            SELECT car_id, make, model, year, daily_rate, transmission, "MPG", location_id 
-            FROM "Cars" 
-            WHERE car_id = %s
-        """, (car_id,))
-        car_data = cur.fetchone()
-        
-        cur.close()
-        conn.close()
-
-        if car_data:
-            car = {
-                "id": car_data[0], "make": car_data[1], "model": car_data[2],
-                "year": car_data[3], "rate": car_data[4], "transmission": car_data[5], 
-                "mpg": car_data[6], "location_id": car_data[7]
-            }
-            return render_template('purchase.html', car=car)
-        else:
-            return "Car not found", 404
-
-    if request.method == 'POST':
-        user_id = 1  # Simulated Logged-in User
-        
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        total_cost = request.form.get('total_cost')
-        location_id = request.form.get('location_id')
-        
-        res_id = random.randint(10000, 99999) 
-        
-        # FIX: Hardcoded payment_id to 1 (Matches John Doe in our data.sql)
-        payment_id = 1 
-
-        try:
-            # Insert reservation into the database
-            cur.execute("""
-                INSERT INTO "Reservations" 
-                (reservation_id, user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
-            """, (res_id, user_id, car_id, location_id, location_id, payment_id, start_date, end_date, total_cost))
-            
-            conn.commit()
-            flash("Booking confirmed successfully!")
-            return redirect(url_for('my_account'))
-            
-        except Exception as e:
-            conn.rollback()
-            print(f"Error: {e}")
-            return f"An error occurred: {e}"
-        finally:
-            cur.close()
-            conn.close()
-
-# NEW ROUTE: Allow user to cancel reservation (Golden Rule: Easy Reversal of Actions)
+# Cancel Reservation
 @app.route('/cancel_reservation/<int:reservation_id>', methods=['POST'])
 def cancel_reservation(reservation_id):
-    conn = get_connection()
+    conn = get_db_connection()
     cur = conn.cursor()
     
-    try:
-        cur.execute("""
-            UPDATE "Reservations" 
-            SET status = 'cancelled' 
-            WHERE reservation_id = %s
-        """, (reservation_id,))
-        conn.commit()
-        flash("Reservation cancelled.")
-    except Exception as e:
-        conn.rollback()
-        flash("Error cancelling reservation.")
-    finally:
-        cur.close()
-        conn.close()
-        
+    # Golden Rule: Permit easy reversal of actions 
+    cur.execute("""
+        UPDATE "Reservations" 
+        SET status = 'cancelled' 
+        WHERE reservation_id = %s AND user_id = %s
+    """, (reservation_id, CURRENT_USER_ID))
+    
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    flash("Reservation cancelled.")
     return redirect(url_for('my_account'))
 
 
