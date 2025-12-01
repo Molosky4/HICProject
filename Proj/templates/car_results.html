@@ -20,7 +20,7 @@
         <div class="col mt-3">
             <div class="col mt-3">
                 {% if car.status == 'available' %}
-                    <a href="{{ url_for('purchase', car_id=car.car_id) }}" class="btn btn-primary">RENT</a>
+                    <a href="{{ url_for('purchase', car_id=car.id) }}" class="btn btn-primary">RENT</a>
                 {% else %}
                     <button class="btn btn-secondary disabled">Unavailable</button>
                 {% endif %}

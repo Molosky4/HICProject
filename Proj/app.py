@@ -243,7 +243,7 @@ def search_cars():
     
     cars_list = [
          {
-             "id": car[0],      # <--- Added this for car_results.html
+              "id": car[0],      # <--- Added this for car_results.html
              "car_id": car[0], # <--- Kept this for purchase.html
              "make": car[1],
              "model": car[2],
@@ -340,11 +340,6 @@ def purchase(car_id):
 
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE reservations SET status = %s WHERE reservation_id = %s;", ('cancelled', reservation_id))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return redirect(url_for('manage_reservations'))
 
     if request.method == 'GET':
         cur.execute("""
@@ -372,6 +367,36 @@ def purchase(car_id):
             return render_template('purchase.html', car=car)
         else:
             return "Car not found", 404
+
+    if request.method == 'POST':
+        # ... (Your POST logic is fine, keep it as is) ...
+        user_id = session['user_id']
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+        total_cost = request.form.get('total_cost')
+        location_id = request.form.get('location_id')
+        
+        res_id = random.randint(10000, 99999) 
+        payment_id = 1 
+
+        try:
+            cur.execute("""
+                INSERT INTO "Reservations" 
+                (reservation_id, user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
+            """, (res_id, user_id, car_id, location_id, location_id, payment_id, start_date, end_date, total_cost))
+            
+            conn.commit()
+            flash("Booking confirmed successfully!")
+            return redirect(url_for('my_account'))
+            
+        except Exception as e:
+            conn.rollback()
+            print(f"Error: {e}")
+            return f"An error occurred: {e}"
+        finally:
+            cur.close()
+            conn.close()
 
 @app.route('/reservation/modify/<int:reservation_id>', methods=['GET', 'POST'])
 def modify_reservation(reservation_id):
@@ -522,7 +547,7 @@ def reserve():
                 days = 1
 
             # Check car exists and is available, and get rate
-            cur.execute("SELECT daily_rate, status FROM \"Cars\" WHERE car_id = %s", (car_id,))
+            cur.execute("SELECT daily_rate, status FROM cars WHERE car_id = %s", (car_id,))
             car_row = cur.fetchone()
             if not car_row:
                 flash('Selected car not found.', 'danger')
@@ -554,34 +579,10 @@ def reserve():
             print('Error creating reservation:', e)
             flash('There was an error creating your reservation. Please try again.', 'danger')
             return redirect(url_for('reserve'))
-        # ... (Your POST logic is fine, keep it as is) ...
-        user_id = session['user_id']
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        total_cost = request.form.get('total_cost')
-        location_id = request.form.get('location_id')
-        
-        res_id = random.randint(10000, 99999) 
-        payment_id = 1 
-
-        try:
-            cur.execute("""
-                INSERT INTO "Reservations" 
-                (reservation_id, user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
-            """, (res_id, user_id, car_id, location_id, location_id, payment_id, start_date, end_date, total_cost))
-            
-            conn.commit()
-            flash("Booking confirmed successfully!")
-            return redirect(url_for('my_account'))
-            
-        except Exception as e:
-            conn.rollback()
-            print(f"Error: {e}")
-            return f"An error occurred: {e}"
         finally:
             cur.close()
             conn.close()
+    
 
 # Cancel Reservation
 # -------------------------------------------------------------------------
