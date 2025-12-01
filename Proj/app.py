@@ -7,6 +7,12 @@ import random # For generating random reservation IDs
 app = Flask(__name__)
 app.secret_key = 'super_secret_key' # Needed for flash messages
 
+CURRENT_USER_ID = 1 # Hardcoded user ID for demo purposes, should chage once login logic is implemented
+# -------------------------------------------------------------------------
+
+
+# Home Page
+# -------------------------------------------------------------------------
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if request.method == 'POST':
