@@ -157,8 +157,8 @@ def search_cars():
 # -------------------------------------------------------------------------
 @app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
 def purchase(car_id):
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    conn = get_connection()
+    cur = conn.cursor()
 
     if request.method == 'POST':
         # 1. Extract Form Data
@@ -206,8 +206,8 @@ def purchase(car_id):
 # -------------------------------------------------------------------------
 @app.route('/my_account', methods=['GET', 'POST'])
 def my_account():
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    conn = get_connection()
+    cur = conn.cursor()
 
     # POST: Update Personal Details
     if request.method == 'POST':
@@ -266,7 +266,7 @@ def my_account():
 # Cancel Reservation
 @app.route('/cancel_reservation/<int:reservation_id>', methods=['POST'])
 def cancel_reservation(reservation_id):
-    conn = get_db_connection()
+    conn = get_connection()
     cur = conn.cursor()
     
     # Golden Rule: Permit easy reversal of actions 
