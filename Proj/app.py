@@ -334,7 +334,6 @@ def my_account():
 
 # Purchase Page
 # -------------------------------------------------------------------------
-
 @app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
 def purchase(car_id):
     if 'user_id' not in session:
@@ -357,24 +356,30 @@ def purchase(car_id):
 
         if car_data:
             car = {
-                "id": car_data[0], "make": car_data[1], "model": car_data[2],
-                "year": car_data[3], "rate": car_data[4], "transmission": car_data[5], 
-                "mpg": car_data[6], "location_id": car_data[7]
+                # FIX: Changed "id" to "car_id" to match your HTML
+                "car_id": car_data[0], 
+                "make": car_data[1], 
+                "model": car_data[2],
+                "year": car_data[3], 
+                "rate": car_data[4], 
+                "transmission": car_data[5], 
+                "mpg": car_data[6], 
+                "location_id": car_data[7]
             }
             return render_template('purchase.html', car=car)
         else:
             return "Car not found", 404
 
     if request.method == 'POST':
+        # ... (Your POST logic is fine, keep it as is) ...
         user_id = session['user_id']
-        
         start_date = request.form.get('start_date')
         end_date = request.form.get('end_date')
         total_cost = request.form.get('total_cost')
         location_id = request.form.get('location_id')
         
         res_id = random.randint(10000, 99999) 
-        payment_id = 1 # Placeholder for payment ID
+        payment_id = 1 
 
         try:
             cur.execute("""
