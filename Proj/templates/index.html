@@ -8,38 +8,47 @@
 </head>
 <body class="background-container">
     <!-- position of NavBar -->
-    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
-        <!--Dropdown-->
-        <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Accordion Item #1
-                </button>
-              </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                  <strong>This is the first item’s accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                </div>
-              </div>
-            </div>
-        </div>
-        
-        
-        <!-- Navbar Container: Centered -->
-        <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto"> <!-- Adjust width as needed -->
-            <div class="p-3">
-                <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
-                    <nav class="nav nav-pills flex-column flex-sm-row">
-                        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
-                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
-                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
 
-                    </nav>
+    <div class="position-fixed w-100 d-flex justify-content-between align-items-center" style="top: 6px; z-index: 10; padding: 0 15px;">
+        <!-- Accordion Container (Left) -->
+        {% if session.get('user_name') %}
+        <div class="accordion" id="accordionExample" style="width: 200px; position: relative;">
+            <div class="accordion-item" style="background-color: var(--bs-primary);">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button d-flex justify-content-between align-items-center bg-primary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="border: none; padding: 12px;">
+                        {{ session.get('user_name') }}
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse bg-primary" data-bs-parent="#accordionExample" style="padding: 12px; border-radius: 5px; position: absolute; top: 100%; left: 0; width: 100%; z-index: 11;">
+                    <div class="accordion-body" style="padding: 0;">
+                        <button class="w-100 bg-transparent text-white" style="border: none; margin: 0;" onclick="window.location.href='{{ url_for('my_account') }}'">My Account</button>
+                        <button class="w-100 bg-transparent text-white" style="border: none; margin: 0;" onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
+                    </div>
                 </div>
             </div>
         </div>
+        {% else %}
+        <div style="width: 300px;">
+            <button class="btn btn-primary position-relative" onclick="window.location.href='{{ url_for('login') }}'">Log In</button>
+        </div>
+        {% endif %}
 
+<<<<<<< HEAD
+
+        <!-- Navbar Container (Center) -->
+        <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity: .55;">
+            <nav class="nav nav-pills flex-column flex-sm-row">
+                <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
+            </nav>
+        </div>
+        
+        <!-- Search Bar Container (Right) -->
+        <div>
+            <form class="d-flex" method="POST" role="search">
+=======
         <!-- Search Bar Container: Pushed to the Right -->
         <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto; position: relative; z-index: 20;">
             <div class="d-flex align-items-center me-3">
@@ -56,8 +65,9 @@
                 {% endif %}
             </div>
             <form class="d-flex" method = "POST" role="search">
+>>>>>>> 2c1ac99ff6d0038deb7cf974f5bfb0bba6c12328
                 <input type="hidden" name="ac" value="sch">
-                <input class="form-control me-2 bg-dark-subtle" name="l" style="--bs-bg-opacity:.55;" type="search" placeholder="Search By Locations" aria-label="Search"/>
+                <input class="form-control me-2 bg-dark-subtle" name="l" style="--bs-bg-opacity: .55;" type="search" placeholder="Search By Locations" aria-label="Search"/>
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -129,8 +139,8 @@
                 <div class="d-flex flex-row justify-content-between gap-3 mx-5">
                     <div class="mx-3">
                         <h4 class="fs-1">Don't know what you want?</h4>
-                        <p>Our catalog is sure to have something for every occasion. Finding a car has never been easier!</p>
-                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('search_cars') }}'">Find it Here</button>
+                        <p>Our catalog is sure to have something for every occasion. Finding a car has never been easier!</p> 
+                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('cars_at_location', location_id=0) }}'">Find it Here</button>
                     </div>
                     <div class="mx-5">
                         <h4 class="fs-1">Want to see where we are?</h4>
@@ -162,14 +172,17 @@
                     <h4 class="fs-1">See What People Think</h4>
                     <div id="reviewsCarousel" class="carousel slide justify-content-center d-flex" data-bs-ride="carousel">
                         <div class="carousel-inner w-50">
-                            <div class="carousel-item active">
-                                <div class="p-4 bg-primary rounded">
-                                    <p>Placeholder</p>
-                                    <h6>- Placeholder</h6>
+                            {% for review in rev %}
+                                <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                                    <div class="p-4 bg-primary rounded">
+                                        <p>{{ review[3] }}</p> <!-- review[3] is the review text -->
+                                        <h6>- {{ review[2] }}</h6> <!-- review[2] is the full name -->
+                                    </div>
                                 </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
+                    
                     
                     <div>
                         <h4 class="fs-2 mb-2">Have Thoughts?</h4>
@@ -182,10 +195,15 @@
                     <div class="modal-dialog">
                         <div class="modal-content" style="background-color:#525252; color:white;">
                             <div class="modal-header" style="border-bottom: 2px solid #c9b500;">
+                                {% if session.get('user_id') %}
                                 <h1 class="modal-title fs-5" id="reviewModalLabel">Leave a Review</h1>
+                                {% else %}
+                                <h1 class="modal-title fs-5" id="reviewModalLabel">Please Log In First</h1>
+                                {% endif %}
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body" style="border-bottom: 2px solid #c9b500;">
+                                {% if session.get('user_id') %}
                                 <form class="form d-flex justify-content-start" action="/" method="POST" id="reviewSubmitForm">
                                     <input type="hidden" name="ac" value="rev">
                                     <textarea required class="my-textarea w-100" 
@@ -193,14 +211,22 @@
                                             style="height: 20vmax; background-color:#525252; color:white;" 
                                             placeholder="What would you like to say?"></textarea>
                                 </form>
+                                {% else %}
+                                <button class="btn btn-primary" onclick="window.location.href='{{ url_for('my_account') }}'">Log In</button>
+                                {% endif %}
                             </div>
                             <div class="modal-footer" style="border:none">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                {% if session.get('user_id') %}
                                 <button class="btn btn-primary" type="submit" form="reviewSubmitForm">Submit</button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+
                 
 
 

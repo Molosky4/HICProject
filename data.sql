@@ -25,6 +25,11 @@ VALUES
 (1, 'John Doe', 'john@example.com', 'hashedpassword1', '555-111-2222'),
 (2, 'Jane Smith', 'jane@example.com', 'hashedpassword2', '555-333-4444');
 
+INSERT INTO "Reviews" (user_id, full_name, review)
+VALUES
+(1, 'John Doe', '10/10, greatest thing yet'),
+(2, 'Jane Smith', 'Im with John');
+
 -- Insert Addresses
 INSERT INTO "Addresses" ("address_id", "user_id", "street", "city", "state", "postal_code", "country")
 VALUES

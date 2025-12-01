@@ -36,7 +36,7 @@ ADD COLUMN "payment_type" VARCHAR(50) NULL;
 
 
 CREATE TABLE "Reviews" (
-    "review_id" INTEGER NOT NULL,
+    "review_id" SERIAL,
     "user_id" INTEGER NOT NULL,
     "full_name" VARCHAR(100) NOT NULL,
     "review" TEXT NOT NULL,
@@ -107,5 +107,5 @@ ALTER TABLE "Addresses"
     ADD CONSTRAINT "addresses_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
 
 ALTER TABLE "PaymentInfo" 
-    ADD CONSTRAINT "paymentinfo_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
+    ADD CONSTRAINT "PaymentInfo_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "Users"("user_id");
 
