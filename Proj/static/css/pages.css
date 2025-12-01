@@ -23,11 +23,11 @@ body {
 
 /* Dashboard Cards (Account Page) */
 .dashboard-card {
-    background-color: #3d3d3d;
-    border: 1px solid #6c757d;
+    background-color: #3d3d3d; /* Keep this dark grey */
     border-radius: 8px;
     padding: 20px;
     height: 100%;
+    /* The border color is now handled directly in the HTML above */
 }
 .dashboard-card h5 {
     color: #ffc107;
