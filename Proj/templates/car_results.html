@@ -1,31 +1,35 @@
 <div class="container text-end">
     {% for car in carsAtLocation %}
-    <div class="row mb-4">
-        <div class="col text-center"> 
+    <div class="row mb-4 align-items-center"> <div class="col-md-3 text-center"> 
             <strong> {{car.year}} {{ car.model }} </strong> 
             <img src="{{ url_for('static', filename='images/' + car.model + '.jpg') }}" 
                  alt="{{ car.model }}" 
                  class="img-fluid mt-3" 
-                 style=" width: 100%; max-height: 150px; object-fit: cover;"> 
-        </div>
-        <div class="col mt-3"> 
-            <div class="col mt-3">  {{car.seats}} Seats</div>
-            <div class="col mt-3">  {{car.transmission}} </div>
-        </div>
-        <div class="col mt-3">
-            <div class="col mt-3">${{car.daily_rate}} / day </div>
-                <div class="col mt-3"></div>
+                 style="width: 100%; max-height: 150px; object-fit: cover;"> 
         </div>
 
-        <div class="col mt-3">
-            <div class="col mt-3">
+        <div class="col-md-3 mt-3 text-center"> 
+            <div class="mb-2"> 
+                💺 {{car.seats}} Seats 
+            </div>
+            <div> 
+                ⚙️ {{car.transmission}} 
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-3 text-center">
+            <h4 class="text-success">${{ car.rate }} / day</h4>
+        </div>
+
+        <div class="col-md-3 mt-3 text-center">
+            <div class="mb-2">
                 {% if car.status == 'available' %}
-                    <a href="{{ url_for('purchase', car_id=car.id) }}" class="btn btn-primary">RENT</a>
+                    <a href="{{ url_for('purchase', car_id=car.id) }}" class="btn btn-primary w-100">RENT</a>
                 {% else %}
-                    <button class="btn btn-secondary disabled">Unavailable</button>
+                    <button class="btn btn-secondary disabled w-100">Unavailable</button>
                 {% endif %}
             </div> 
-            <div class="col mt-2"> status: <i>{{car.status}}</i> </div>
+            <div class="small text-muted"> Status: <i>{{car.status}}</i> </div>
         </div>
     </div>
     <hr class="mx-auto w-100 my-5" style="border-top: 3px solid #c9b500">
