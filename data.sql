@@ -52,4 +52,3 @@ VALUES
 ('Holiday Special', '20% off all cars during holidays', '2025-12-31', 20.0, 'specials_holiday.jpg'),
 ('Weekend Special', '15% off SUVs on weekends', '2025-12-13', 15.0, 'specials_weekend.jpg'),
 ('Student Special', '10% off for students with valid ID', '2025-12-31', 10.0, 'specials_student.jpg');
->>>>>>> 71ea6ce4921a2c207e2a97d4631d2bcd77d3ae7f
