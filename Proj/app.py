@@ -112,6 +112,12 @@ def logout():
 # MAIN APP ROUTES
 # -------------------------------------------------------------------------
 
+CURRENT_USER_ID = 2 # Hardcoded user ID for demo purposes, should chage once login logic is implemented
+# -------------------------------------------------------------------------
+
+
+# Home Page
+# -------------------------------------------------------------------------
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if request.method == 'POST':
@@ -195,13 +201,25 @@ def cars_at_location(location_id):
     cur.close()
     conn.close()
 
+    # FIXED: Changed "id" to "car_id" to match the HTML template
     carsAtLocation = [
-         {"id": car[0], "make": car[1], "model": car[2], "year": car[3], "rate":car[4], "transmission": car[5],
-           "seats": car[6], "MPG":car[7], "special": car[8], "status": car[9]}
+         {
+             "car_id": car[0],
+             "make": car[1], 
+             "model": car[2], 
+             "year": car[3], 
+             "rate": car[4], 
+             "transmission": car[5],
+             "seats": car[6], 
+             "MPG": car[7], 
+             "special": car[8], 
+             "status": car[9]
+         }
         for car in cars
     ]
 
-    return render_template("cars.html", carsAtLocation=carsAtLocation, location_id=location_id) 
+    return render_template("cars.html", carsAtLocation=carsAtLocation, location_id=location_id)
+
 
 @app.route('/search_cars', methods=['GET'])
 def search_cars():
@@ -227,9 +245,20 @@ def search_cars():
     cur.close()
     conn.close()
     
+    # FIX: Changed "id" to "car_id" here as well
     cars_list = [
-         {"id": car[0], "make": car[1], "model": car[2], "year": car[3], "rate":car[4], "transmission": car[5],
-           "seats": car[6], "MPG":car[7], "special": car[8], "status": car[9]}
+         {
+             "car_id": car[0], # <--- CHANGED FROM "id"
+             "make": car[1], 
+             "model": car[2], 
+             "year": car[3], 
+             "rate": car[4], 
+             "transmission": car[5],
+             "seats": car[6], 
+             "MPG": car[7], 
+             "special": car[8], 
+             "status": car[9]
+         }
         for car in cars
     ]
 
@@ -240,11 +269,76 @@ def search_cars():
 
     return render_template('car_results.html', carsAtLocation=filtered_cars)
 
+# Purchase Page
+# -------------------------------------------------------------------------
+@app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
+def purchase(car_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        total_cost = request.form['total_cost']
+        location_id = request.form['location_id']
+        
+        insert_query = """
+            INSERT INTO "Reservations" 
+            (user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'confirmed')
+        """
+        cur.execute(insert_query, (
+            CURRENT_USER_ID, 
+            car_id, 
+            location_id, 
+            location_id, 
+            1, # Hardcoded Payment ID
+            start_date, 
+            end_date, 
+            total_cost
+        ))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        flash("Reservation confirmed successfully!")
+        return redirect(url_for('my_account'))
+
+    # --- GET Request: Fetch Car Details ---
+    cur.execute("""
+        SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status, location_id 
+        FROM "Cars" 
+        WHERE car_id = %s
+    """, (car_id,))
+    
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    
+    if row:
+        # FIX: Changed "id" to "car_id" to match your HTML template
+        car = {
+            "car_id": row[0], 
+            "make": row[1],
+            "model": row[2],
+            "year": row[3],
+            "daily_rate": row[4],
+            "transmission": row[5],
+            "seats": row[6],
+            "MPG": row[7],
+            "special": row[8],
+            "status": row[9],
+            "location_id": row[10]
+        }
+    else:
+        return "Car not found", 404
+    
+    return render_template('purchase.html', car=car)
 
 # My Account Page
 # -------------------------------------------------------------------------
-
-@app.route('/my_account', methods=['GET'])
+@app.route('/my_account', methods=['GET', 'POST'])
 def my_account():
     # Use Session instead of hardcoded User ID
     if 'user_id' not in session:
@@ -259,17 +353,17 @@ def my_account():
     cur.execute('SELECT full_name, email, phone_number FROM "Users" WHERE user_id = %s', (user_id,))
     user_data = cur.fetchone()
     
-    user = None
-    if user_data:
-        full_name_split = user_data[0].split(' ', 1)
-        first_name = full_name_split[0]
-        last_name = full_name_split[1] if len(full_name_split) > 1 else ""
+    if user_row:
+        # FIX: Access tuple by index (0, 1, 2) instead of string keys
+        # user_row[0] is full_name, user_row[1] is email, etc.
+        full_name_text = user_row[0] if user_row[0] else " "
+        names = full_name_text.split(' ', 1)
         
-        user = {
-            "first_name": first_name,
-            "last_name": last_name,
-            "email": user_data[1],
-            "phone": user_data[2]
+        user_formatted = {
+            'first_name': names[0],
+            'last_name': names[1] if len(names) > 1 else '',
+            'email': user_row[1],
+            'phone': user_row[2]
         }
 
     cur.execute("""
@@ -278,20 +372,9 @@ def my_account():
         JOIN "Cars" c ON r.car_id = c.car_id
         WHERE r.user_id = %s
         ORDER BY r.pick_up_date DESC
-    """, (user_id,))
-    
-    rows = cur.fetchall()
-    
-    history = [
-        {
-            "id": row[0],
-            "date": row[1], 
-            "car": f"{row[2]} {row[3]} {row[4]}", 
-            "cost": row[5], 
-            "status": row[6]
-        } 
-        for row in rows
-    ]
+    """
+    cur.execute(history_query, (CURRENT_USER_ID,))
+    history_rows = cur.fetchall()
 
     cur.close()
     conn.close()
@@ -366,21 +449,18 @@ def cancel_reservation(reservation_id):
     conn = get_connection()
     cur = conn.cursor()
     
-    try:
-        cur.execute("""
-            UPDATE "Reservations" 
-            SET status = 'cancelled' 
-            WHERE reservation_id = %s
-        """, (reservation_id,))
-        conn.commit()
-        flash("Reservation cancelled.")
-    except Exception as e:
-        conn.rollback()
-        flash("Error cancelling reservation.")
-    finally:
-        cur.close()
-        conn.close()
-        
+    # Golden Rule: Permit easy reversal of actions 
+    cur.execute("""
+        UPDATE "Reservations" 
+        SET status = 'cancelled' 
+        WHERE reservation_id = %s AND user_id = %s
+    """, (reservation_id, CURRENT_USER_ID))
+    
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    flash("Reservation cancelled.")
     return redirect(url_for('my_account'))
 
 
