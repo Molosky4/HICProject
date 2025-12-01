@@ -245,10 +245,10 @@ def search_cars():
     cur.close()
     conn.close()
     
-    # FIX: Changed "id" to "car_id" here as well
+    # FIXED: Changed "id" to "car_id" here as well
     cars_list = [
          {
-             "car_id": car[0], # <--- CHANGED FROM "id"
+             "car_id": car[0],
              "make": car[1], 
              "model": car[2], 
              "year": car[3], 
