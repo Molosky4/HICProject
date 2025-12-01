@@ -1,35 +1,24 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Review & Purchase</title>
+    
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/customCss.css">
-    <style>
-        /* Custom styles to match the wireframe and theme */
-        .content-card {
-            background-color: #525252;
-            color: white;
-            border: 1px solid #6c757d;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .form-label { 
-            font-weight: bold; 
-            color: #ffc107; 
-        }
-    </style>
 </head>
+
 <body class="background-container">
 
-    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
+    <div class="d-flex align-items-center position-fixed w-100" style="top: 30px; z-index: 10;">
         <div class="d-flex position-absolute justify-content-center w-75" style="right:0; left:0; margin:auto"> 
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
                     <nav class="nav nav-pills flex-column flex-sm-row">
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('home') }}">Home</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
-                        <a class="flex-sm-fill text-sm-center nav-link" href="#">Specials</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('my_account') }}">My Account</a>
                     </nav>
                 </div>
@@ -38,11 +27,21 @@
     </div>
 
     <div class="container-fluid d-flex justify-content-center align-items-center" style="margin-top: 15vh; margin-bottom: 5vh">
-        <div class="d-flex border border-secondary-subtle justify-content-center align-items-center flex-column rounded-1 text-center" style="width:90%; --bs-bg-opacity:.9; background-color: #525252; color:white; padding: 20px;">
+        
+        <div class="d-flex border border-secondary-subtle justify-content-center align-items-center flex-column rounded-1 text-center" 
+             style="width:90%; --bs-bg-opacity:.9; background-color: #525252; color:white; padding: 20px;">
             
             <div class="mx-auto" style="width:75%">
                 <h4 class="my-5 border-bottom border-secondary text-center rounded-1" style="font-size:4rem">Review & Purchase</h4>
             </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-danger w-50" role="alert">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
             <div class="row w-100 justify-content-center px-4 mb-5">
             
@@ -59,15 +58,16 @@
                             <strong>Transmission:</strong> {{ car.transmission }}<br>
                             <strong>MPG:</strong> {{ car.mpg }}<br>
                         </p>
+                        
                         <h4 class="mt-4">Daily Rate: $<span id="daily-rate" class="text-warning">{{ car.rate }}</span></h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="content-card h-100 text-start">
-                        <h4 class="mb-4 border-bottom border-warning pb-2">Reservation & Payment</h4>
+                        <h4 class="mb-4 border-bottom border-warning pb-2">Reservation Details</h4>
                         
-                        <form action="{{ url_for('purchase', car_id=car.id) }}" method="POST">
+                        <form action="{{ url_for('purchase', car_id=car.car_id) }}" method="POST">
                             <input type="hidden" name="location_id" value="{{ car.location_id }}">
                             
                             <div class="row mb-3">
@@ -81,21 +81,47 @@
                                 </div>
                             </div>
 
+                            <h5 class="mt-4 mb-3 text-warning border-bottom border-secondary pb-1">Personal Details</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" name="first_name" class="form-control bg-secondary text-white border-warning" placeholder="Meheraj" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control bg-secondary text-white border-warning" placeholder="Khatri" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" name="email" class="form-control bg-secondary text-white border-warning" placeholder="hicproject@cs.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" name="phone" class="form-control bg-secondary text-white border-warning" placeholder="(123) 890-4567" required>
+                            </div>
+
                             <h5 class="mt-4 mb-3 text-warning border-bottom border-secondary pb-1">Payment Information</h5>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Card Number</label>
-                                <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="0000 0000 0000 0000" required>
+                                <input type="text" name="card_number" class="form-control bg-secondary text-white border-warning" placeholder="0000 0000 0000 0000" required>
                             </div>
                             <div class="row mb-4">
                                 <div class="col-6">
                                     <label class="form-label">Expiration Date</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="MM/YY" required>
+                                    <input type="text" name="expiry" class="form-control bg-secondary text-white border-warning" placeholder="MM/YY" required>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">CVV</label>
-                                    <input type="text" class="form-control bg-secondary text-white border-warning" placeholder="123" required>
+                                    <input type="text" name="cvv" class="form-control bg-secondary text-white border-warning" placeholder="123" required>
                                 </div>
                             </div>
+
+                            <h5 class="mt-4 mb-2 text-warning border-bottom border-secondary pb-1">Cancellation Policy</h5>
+                            <p class="small text-light mb-3">
+                                <em>Free cancellation is available up to 24 hours before your pick-up time.</em>
+                            </p>
 
                             <div class="d-flex justify-content-between align-items-center p-3 mb-4 rounded" style="background-color: #343a40; border: 2px solid #ffc107;">
                                 <span class="fs-5 fw-bold">Total Cost:</span>
@@ -104,11 +130,22 @@
                             
                             <input type="hidden" id="total_cost" name="total_cost" value="0">
 
+                            <div class="form-check mb-4 text-start">
+                                <input class="form-check-input bg-secondary border-warning" type="checkbox" value="" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I have read and accept the <a href="#" class="link-warning">Terms and Conditions</a>
+                                </label>
+                            </div>
+
                             <button type="submit" class="btn btn-primary w-100 py-2 fs-5 mb-2">Confirm Booking</button>
                             <a href="{{ url_for('home') }}" class="btn btn-outline-light w-100">Cancel</a>
                         </form>
                     </div>
                 </div>
+            </div>
+            
+            <div class="text-center account-footer mt-5">
+                <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com</p>
             </div>
         </div>
     </div>
@@ -123,9 +160,16 @@
                 const start = new Date(startInput);
                 const end = new Date(endInput);
                 
+                if (end <= start) {
+                    alert("The Drop-off date must be AFTER the Pick-up date.");
+                    document.getElementById('end_date').value = ""; 
+                    document.getElementById('display-total').innerText = "0.00";
+                    document.getElementById('total_cost').value = "0";
+                    return;
+                }
+
                 const diffTime = end - start;
-                // Calculate days (add 1 to include start day)
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
                 if (diffDays > 0) {
                     const total = (diffDays * rate).toFixed(2);
@@ -135,9 +179,6 @@
                     document.getElementById('display-total').innerText = "0.00";
                     document.getElementById('total_cost').value = "0";
                 }
-            } else {
-                 document.getElementById('display-total').innerText = "0.00";
-                 document.getElementById('total_cost').value = "0";
             }
         }
     </script>

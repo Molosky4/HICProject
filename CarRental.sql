@@ -1,5 +1,5 @@
 CREATE TABLE "Users"(
-    "user_id" INTEGER NOT NULL,
+    "user_id" SERIAL NOT NULL, -- Updated to SERIAL for Create Account functionality
     "full_name" VARCHAR(100) NOT NULL,
     "email" VARCHAR(100) NOT NULL,
     "password_hash" VARCHAR(255) NOT NULL,
@@ -30,6 +30,10 @@ CREATE TABLE "PaymentInfo"(
 );
 ALTER TABLE
     "PaymentInfo" ADD PRIMARY KEY("payment_id");
+
+ALTER TABLE "PaymentInfo"
+ADD COLUMN "payment_type" VARCHAR(50) NULL;
+
 
 CREATE TABLE "Reviews" (
     "review_id" INTEGER NOT NULL,

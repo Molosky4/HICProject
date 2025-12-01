@@ -9,6 +9,23 @@
 <body class="background-container">
     <!-- position of NavBar -->
     <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
+        <!--Dropdown-->
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Accordion Item #1
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>This is the first item’s accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        
         <!-- Navbar Container: Centered -->
         <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto"> <!-- Adjust width as needed -->
             <div class="p-3">
@@ -24,7 +41,20 @@
         </div>
 
         <!-- Search Bar Container: Pushed to the Right -->
-        <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto">
+        <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto; position: relative; z-index: 20;">
+            <div class="d-flex align-items-center me-3">
+                {% if session['user_id'] %}
+                <span class="navbar-text me-3">
+                    Hello, {{ session['user_name'] }}!
+                </span>
+                <a href="{{ url_for('my_account') }}" class="btn btn-outline-primary me-2">My Account</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+                {% else %}
+                
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{{ url_for('create_account') }}" class="btn btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
             <form class="d-flex" method = "POST" role="search">
                 <input type="hidden" name="ac" value="sch">
                 <input class="form-control me-2 bg-dark-subtle" name="l" style="--bs-bg-opacity:.55;" type="search" placeholder="Search By Locations" aria-label="Search"/>

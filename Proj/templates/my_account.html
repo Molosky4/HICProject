@@ -1,130 +1,172 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Account</title>
+    
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/customCss.css">
-    <style>
-        /* Custom styles to match the wireframe and theme */
-        .content-card {
-            background-color: #525252;
-            color: white;
-            border: 1px solid #6c757d;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .form-label { 
-            font-weight: bold; 
-            color: #ffc107; /* Consistent accent color, close to #c9b500 */
-        }
-        .table-custom thead th { 
-            color: #ffc107; 
-            border-bottom: 2px solid #ffc107;
-        }
-    </style>
 </head>
+
 <body class="background-container">
 
-    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
-        <div class="d-flex position-absolute justify-content-center w-75" style="right:0; left:0; margin:auto"> 
+    <div class="d-flex align-items-center position-fixed w-100" style="top: 30px; z-index: 10;">
+        <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto"> 
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
                     <nav class="nav nav-pills flex-column flex-sm-row">
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('home') }}">Home</a>
                         <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
-                        <a class="flex-sm-fill text-sm-center nav-link" href="#">Specials</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
                         <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('my_account') }}">My Account</a>
                     </nav>
                 </div>
             </div>
         </div>
+        <div class="d-flex position-absolute p-3" style="right: 20px;">
+            <a href="{{ url_for('home') }}" class="btn btn-danger fw-bold">Log Out</a>
+        </div>
     </div>
 
-    <div class="container-fluid d-flex justify-content-center align-items-center" style="margin-top: 15vh; margin-bottom: 5vh">
-        <div class="d-flex border border-secondary-subtle justify-content-center align-items-center flex-column rounded-1 text-center" style="width:90%; --bs-bg-opacity:.9; background-color: #525252; color:white;">
+    <div class="container-fluid" style="margin-top: 150px; padding-bottom: 50px;">
+        <div class="col-md-10 mx-auto">
             
-            <div class="mx-auto" style="width:75%">
-                <h4 class="my-5 border-bottom border-secondary text-center rounded-1" style="font-size:4rem">My Account</h4>
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-5">My Account</h2>
+                <h4 class="text-warning">Welcome back, {{ user.first_name }}!</h4>
             </div>
 
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                    <div class="alert alert-success w-75" role="alert">
+                    <div class="alert alert-success" role="alert">
                         {{ messages[0] }}
                     </div>
                 {% endif %}
             {% endwith %}
 
-            <div class="row w-100 justify-content-center px-4 mb-5">
-                <div class="col-md-4 mb-4">
-                    <div class="content-card h-100 text-start">
-                        <h4 class="mb-3 border-bottom border-warning pb-2">User Profile</h4>
-                        <form>
-                            <div class="mb-3">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control bg-secondary text-white border-warning" value="{{ user.first_name }}" readonly>
+            {% set upcoming = namespace(found=false) %}
+            {% for item in history %}
+                {% if item.status == 'confirmed' and not upcoming.found %}
+                    {% set upcoming.found = true %}
+                    
+                    <div class="content-box upcoming-box text-start" style="background-color: #525252; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffc107;">
+                        <h4 class="border-bottom border-warning pb-2 mb-3">Your Upcoming Reservation</h4>
+                        
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3 class="fw-bold mb-3">{{ item.car }}</h3>
+                                <p class="mb-1"><strong>Pick-up:</strong> {{ item.date }}</p>
+                                <p class="mb-1"><strong>Total Cost:</strong> ${{ item.cost }}</p>
+                                <p class="text-success fw-bold">Status: Confirmed</p>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control bg-secondary text-white border-warning" value="{{ user.last_name }}" readonly>
+                            
+                            <div class="col-md-4 text-end">
+                                <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Cancel this reservation?');">Cancel Reservation</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control bg-secondary text-white border-warning" value="{{ user.email }}" readonly>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if not upcoming.found %}
+                <div class="content-box text-center py-4 mb-4" style="background-color: #525252; border-radius: 10px;">
+                    <h4 class="text-muted">No Upcoming Reservations</h4>
+                    <a href="{{ url_for('locations') }}" class="btn btn-warning mt-2">Book a Car Now</a>
+                </div>
+            {% endif %}
+
+            <div class="row mb-4">
+                
+                <div class="col-md-6 mb-3">
+                    <div class="dashboard-card text-start p-4" style="background-color: #525252; color: white; border: 1px solid #ffc107; border-radius: 10px;">
+                        <h5 class="fw-bold text-white border-bottom border-warning pb-2">Edit Personal Details</h5>
+                        
+                        <form action="{{ url_for('my_account') }}" method="POST">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label class="form-label text-warning small mb-1">First Name</label>
+                                    <input type="text" name="first_name" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.first_name }}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-warning small mb-1">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.last_name }}">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number</label>
-                                <input type="text" class="form-control bg-secondary text-white border-warning" value="{{ user.phone }}" readonly>
+                            
+                            <div class="mb-2">
+                                <label class="form-label text-warning small mb-1">Email Address</label>
+                                <input type="email" name="email" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.email }}">
                             </div>
+                            
                             <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control bg-secondary text-white border-warning" value="********" readonly>
+                                <label class="form-label text-warning small mb-1">Phone Number</label>
+                                <input type="text" name="phone" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.phone }}">
                             </div>
-                            <button type="button" class="btn btn-primary w-100 mt-2">Edit Profile</button>
+                            
+                            <button type="submit" class="btn btn-warning w-100 fw-bold text-dark">Save Changes</button>
                         </form>
                     </div>
                 </div>
 
-                <div class="col-md-8">
-                    <div class="content-card h-100 text-start">
-                        <h4 class="mb-3 border-bottom border-warning pb-2">Rental History</h4>
-                        {% if history %}
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover table-custom">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Vehicle</th>
-                                        <th>Total Cost</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in history %}
-                                    <tr>
-                                        <td>{{ item.date }}</td>
-                                        <td>{{ item.car }}</td>
-                                        <td>${{ item.cost }}</td>
-                                        <td>
-                                            <span class="badge {% if item.status == 'confirmed' %}bg-success{% else %}bg-secondary{% endif %}">
-                                                {{ item.status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                <div class="col-md-6 mb-3">
+                    <div class="dashboard-card text-center d-flex flex-column justify-content-center p-4" style="background-color: #525252; color: white; border-radius: 10px; height: 100%;">
+                        <h5>Rewards & Loyalty</h5>
+                        <div class="my-3">
+                            <h1 class="display-4 text-warning fw-bold">1,250</h1>
+                            <p class="text-white">R&R Points Available</p>
                         </div>
-                        {% else %}
-                            <p class="text-center">No rental history found.</p>
-                            <div class="text-center">
-                                <a href="{{ url_for('locations') }}" class="btn btn-outline-warning">Book a Car</a>
-                            </div>
-                        {% endif %}
+                        <div class="badge bg-warning text-dark fs-6 mb-3 mx-auto" style="width: fit-content;">Gold Member</div>
+                        
+                        <button class="btn btn-sm btn-outline-light" onclick="alert('Points system not implemented in prototype.')">
+                            Redeem Points
+                        </button>
                     </div>
                 </div>
+
             </div>
+
+            <div class="content-box text-start p-4" style="background-color: #525252; color: white; border-radius: 10px;">
+                <h4 class="border-bottom border-secondary pb-2 mb-3">Past Reservations</h4>
+                
+                {% if history %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-warning">Date</th>
+                                    <th class="text-warning">Vehicle</th>
+                                    <th class="text-warning">Cost</th>
+                                    <th class="text-warning">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in history %}
+                                <tr>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.car }}</td>
+                                    <td>${{ item.cost }}</td>
+                                    <td>
+                                        <span class="badge {% if item.status == 'confirmed' %}bg-success{% elif item.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ item.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>You have no reservation history.</p>
+                {% endif %}
+            </div>
+
+            <div class="text-center account-footer mt-5">
+                <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com</p>
+            </div>
+
         </div>
     </div>
     

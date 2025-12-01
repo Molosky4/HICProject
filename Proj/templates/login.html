@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent and Roam - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/customCss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Updated Colors from Image */
+            --rr-navbar-gold: #dcc753;
+            --rr-navbar-blue: #0d6efd;
+            
+            /* Existing Theme Colors */
+            --rr-gold: #d4af37; 
+            --rr-blue: #1a4a7c; 
+        }
+
+        body.background-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+        }
+        
+        .main-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+        }
+        .main-header h1 {
+            font-weight: 700;
+            font-size: 3.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .header-underline {
+            width: 180px;
+            height: 4px;
+            background: var(--rr-gold);
+            margin: 0 auto;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .auth-card {
+            /* Grey Tint Background over content */
+            background-color: rgba(82, 82, 82, 0.9);
+            color: white;
+            border-top: 6px solid var(--rr-blue);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeInUp 0.5s ease-out;
+            position: relative;
+        }
+
+        .form-title {
+            text-align: center;
+            color: var(--rr-navbar-gold);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .form-title.boxed {
+            border: 2px solid var(--rr-navbar-gold);
+            color: white;
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            box-shadow: 4px 4px 0px var(--rr-navbar-gold);
+            background: transparent;
+        }
+
+        /* --- UPDATED INPUT STYLES (BLACK BOX) --- */
+        .form-floating > .form-control {
+            border: 2px solid #555; /* Subtle border */
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #fff !important; /* White text for visibility */
+            background-color: #000 !important; /* Black background */
+            font-weight: 500;
+        }
+        
+        .form-floating > .form-control:focus {
+            border-color: var(--rr-navbar-gold);
+            background-color: #000 !important; /* Keep black on focus */
+            box-shadow: 0 0 0 4px rgba(220, 199, 83, 0.25);
+            color: #fff !important;
+        }
+        
+        /* Label styling to ensure readability on black background */
+        .form-floating > label { 
+            color: #aaa !important; /* Light grey label */
+        }
+        
+        .form-floating > .form-control::placeholder { 
+            color: #777 !important; /* Dim placeholder */
+        }
+
+        .btn-gold {
+            background: linear-gradient(to bottom, var(--rr-gold), #cba22e);
+            color: #1a1a1a;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-gold:hover {
+            background: linear-gradient(to bottom, #e0bc46, var(--rr-gold));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .link-blue {
+            color: var(--rr-navbar-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .link-blue:hover {
+            color: var(--rr-navbar-gold);
+            text-decoration: underline;
+        }
+
+        /* --- Updated Navbar Styles --- */
+        .nav-pill-container {
+            background-color: var(--rr-navbar-gold);
+            border-radius: 50rem;
+            padding: 0.5rem 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .nav-link {
+            color: var(--rr-navbar-blue) !important;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.5rem 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0a58ca !important;
+        }
+
+        .nav-link.active {
+            background-color: var(--rr-navbar-blue) !important;
+            color: white !important;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="background-container">
+
+    <div class="d-flex align-items-center position-fixed w-100" style="top: 0; z-index: 10;">
+        <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto">
+            <div class="p-3">
+                <div class="nav-pill-container">
+                    <!-- Updated Navbar Links based on Screenshot -->
+                    <nav class="nav nav-pills flex-column flex-sm-row gap-3 align-items-center">
+                        <a class="flex-sm-fill text-sm-center nav-link active" href="{{ url_for('home') }}">Home</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('locations') }}">Locations</a>
+                        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('specials') }}">Specials</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto">
+            <form class="d-flex" role="search" action="{{ url_for('search_locations') }}">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search By Locations" aria-label="Search" style="background-color: #e9ecef; color: #333;"/>
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <h1>Rent and Roam</h1>
+        <div class="header-underline"></div>
+    </header>
+
+    <div class="auth-card">
+        <div class="text-center mb-5">
+            <h2 class="form-title boxed">Welcome back!</h2>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} mb-4" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                <label for="email">Email address</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <label for="password">Password</label>
+            </div>
+            
+            <div class="d-flex justify-content-end mb-4">
+                <a href="{{ url_for('forgot_password') }}" class="link-blue" style="font-size: 0.9rem;">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-gold mb-4">Log in</button>
+        </form>
+
+        <div class="text-center text-muted small mt-2" style="color: #ccc !important;">
+            Don't have an account? <a href="{{ url_for('create_account') }}" class="link-blue ms-1">Sign up</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
