@@ -22,19 +22,22 @@ VALUES
 INSERT INTO "Users" ("user_id", "full_name", "email", "password_hash", "phone_number")
 VALUES
 (1, 'John Doe', 'john@example.com', 'hashedpassword1', '555-111-2222'),
-(2, 'Jane Smith', 'jane@example.com', 'hashedpassword2', '555-333-4444');
+(2, 'Jane Smith', 'jane@example.com', 'hashedpassword2', '555-333-4444'),
+(3, 'Meheraj Khatri', 'meheraj@cs.com', 'hashedpassword3', '555-555-6666');
 
 -- Insert Addresses
 INSERT INTO "Addresses" ("address_id", "user_id", "street", "city", "state", "postal_code", "country")
 VALUES
 (1, 1, '123 Main St', 'Cleveland', 'Ohio', '44101', 'USA'),
-(2, 2, '6427 Hickory Ln', 'San Francisco', 'California', '42346', 'USA');
+(2, 2, '6427 Hickory Ln', 'San Francisco', 'California', '42346', 'USA'),
+(3, 3, '1800 Rhodes Rd', 'Kent', 'Ohio', '44240', 'USA');
 
 -- Insert Paymentinfo
 INSERT INTO "PaymentInfo" ("payment_id", "user_id", "card_number", "card_holder_name", "expiration_date", "billing_address", "payment_type") 
 VALUES 
 (1, 1, '1111222233334444', 'John Doe', '2025-12-31', '123 Main St, Cleveland', 'Credit Card'),
-(2, 2, '5555666677778888', 'Jane Smith', '2025-12-31', '6427 Hickory Ln, San Francisco', 'Debit Card');
+(2, 2, '5555666677778888', 'Jane Smith', '2025-12-31', '6427 Hickory Ln, San Francisco', 'Debit Card'),
+(3, 3, '5555666677778888', 'Meheraj Khatri', '2025-12-8', '1800 Rhodes Rd, Kent', 'Credit Card');
 
 
 
@@ -44,6 +47,7 @@ VALUES
 (1, 1, 101, 1, 2, 1, '2025-11-28', '2025-11-30', 100.00, 'confirmed'),
 (2, 2, 103, 2, 2, 2, '2025-12-01', '2025-12-03', 180.00, 'pending'),
 (3, 1, 104, 1, 1, 1, '2025-12-05', '2025-12-07', 190.00, 'cancelled');
+(4, 3, 107, 2, 1, 3, '2025-12-10', '2025-12-12', 170.00, 'confirmed');
 
 -- Insert Specials
 INSERT INTO "Specials" ("title", "description", "valid_until", "discount", "image_path")
