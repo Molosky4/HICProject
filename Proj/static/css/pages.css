@@ -1,0 +1,79 @@
+/* --- pages.css --- */
+
+/* General Text Color */
+body {
+    color: white;
+}
+
+/* Content Box / Card Styling */
+.content-box, .content-card {
+    background-color: #525252;
+    border: 2px solid #6c757d;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    color: white; /* Ensures text inside cards is white */
+}
+
+/* Upcoming Reservation Highlight Box */
+.upcoming-box {
+    border: 2px solid #ffc107; /* Gold border */
+    background-color: #444; 
+}
+
+/* Dashboard Cards (Account Page) */
+.dashboard-card {
+    background-color: #3d3d3d;
+    border: 1px solid #6c757d;
+    border-radius: 8px;
+    padding: 20px;
+    height: 100%;
+}
+.dashboard-card h5 {
+    color: #ffc107;
+    border-bottom: 1px solid #6c757d;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Form Labels (Purchase Page) */
+.form-label { 
+    font-weight: bold; 
+    color: #ffc107; 
+}
+
+/* Action Buttons (Modify/Cancel/Directions) */
+.action-btn {
+    width: 100%;
+    margin-bottom: 10px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+}
+.action-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+/* Red Cancel Button specific style */
+.cancel-btn {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+.cancel-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Footer Links */
+.account-footer a {
+    color: #aaa;
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.account-footer a:hover {
+    color: #ffc107;
+}
