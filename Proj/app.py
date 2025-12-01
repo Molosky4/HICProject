@@ -334,9 +334,9 @@ def my_account():
 # -------------------------------------------------------------------------
 @app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
 def purchase(car_id):
-    # if 'user_id' not in session:
-    #     flash("Please log in to reserve a car.")
-    #     return redirect(url_for('login'))
+    if 'user_id' not in session:
+        flash("Please log in to reserve a car.")
+        return redirect(url_for('login'))
 
     conn = get_connection()
     cur = conn.cursor()
@@ -370,7 +370,7 @@ def purchase(car_id):
 
     if request.method == 'POST':
         # ... (Your POST logic is fine, keep it as is) ...
-        user_id = 1 #session['user_id']
+        user_id = session['user_id']
         start_date = request.form.get('start_date')
         end_date = request.form.get('end_date')
         total_cost = request.form.get('total_cost')
