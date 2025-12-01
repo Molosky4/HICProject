@@ -372,7 +372,7 @@ def my_account():
         JOIN "Cars" c ON r.car_id = c.car_id
         WHERE r.user_id = %s
         ORDER BY r.pick_up_date DESC
-    """
+    """)
     cur.execute(history_query, (CURRENT_USER_ID,))
     history_rows = cur.fetchall()
 
