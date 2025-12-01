@@ -145,9 +145,9 @@
                             <tbody>
                                 {% for item in history %}
                                 <tr>
-                                    <td>{{ item.date }}</td>
-                                    <td>{{ item.car }}</td>
-                                    <td>${{ item.cost }}</td>
+                                    <td>{{ item.pick_up_date }}</td>
+                                    <td>{{ item.car_name }}</td>
+                                    <td>${{ item.total_cost }}</td>
                                     <td>
                                         <span class="badge {% if item.status == 'confirmed' %}bg-success{% elif item.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
                                             {{ item.status }}
