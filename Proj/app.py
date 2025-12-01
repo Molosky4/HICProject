@@ -148,7 +148,7 @@ def locations():
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT location_id, name, street, city, image, open_time, close_time, days_open FROM \"Locations\";")
+    cur.execute("SELECT location_id, name, street, city, image_file, opens, closes, days_open FROM \"Locations\";")
     rows = cur.fetchall()
 
     cur.close()
@@ -170,7 +170,7 @@ def search_locations():
     conn = get_connection()
     cur = conn.cursor()
     
-    cur.execute("SELECT location_id, name, street, city, image, open_time, close_time, days_open FROM \"Locations\";")
+    cur.execute("SELECT location_id, name, street, city, image_file, opens, closes, days_open FROM \"Locations\";")
     rows = cur.fetchall()
 
     cur.close()
@@ -319,7 +319,7 @@ def my_account():
     
     # FIX: Use 'user_id' (from session), not 'CURRENT_USER_ID'
     cur.execute(history_query, (user_id,))
-    cur.execute(history_query, (CURRENT_USER_ID,))
+    # cur.execute(history_query, (CURRENT_USER_ID,))
     history_rows = cur.fetchall()
 
     cur.close()

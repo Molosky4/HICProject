@@ -67,7 +67,7 @@
                     <div class="content-card h-100 text-start">
                         <h4 class="mb-4 border-bottom border-warning pb-2">Reservation Details</h4>
                         
-                        <form action="{{ url_for('purchase', car_id=car.car_id) }}" method="POST">
+                        <form action="{{ url_for('purchase', car_id=car.id) }}" method="POST">
                             <input type="hidden" name="location_id" value="{{ car.location_id }}">
                             
                             <div class="row mb-3">
