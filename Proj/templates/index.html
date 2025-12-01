@@ -25,6 +25,10 @@
 
         <!-- Search Bar Container: Pushed to the Right -->
         <div class="d-flex p-3 justify-content-end" style="margin-right:0; margin-left:auto">
+            <div class="d-flex align-items-center me-3">
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">Login</a>
+                <a href="{{ url_for('create_account') }}" class="btn btn-primary">Sign Up</a>
+            </div>
             <form class="d-flex" method = "POST" role="search">
                 <input type="hidden" name="ac" value="sch">
                 <input class="form-control me-2 bg-dark-subtle" name="l" style="--bs-bg-opacity:.55;" type="search" placeholder="Search By Locations" aria-label="Search"/>
