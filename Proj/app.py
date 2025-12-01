@@ -154,12 +154,12 @@ def search_cars():
     return render_template('car_results.html', carsAtLocation=filtered_cars)
 
 
-# My Account & Purchase Page
+# My Account Page
 # -------------------------------------------------------------------------
 
 @app.route('/my_account', methods=['GET'])
 def my_account():
-    # Simulate a logged-in user (User ID 1 based on your SQL setup)
+    # Simulate a logged-in user (User ID 1 based on our SQL setup)
     user_id = 1 
     
     conn = get_connection()
@@ -209,6 +209,8 @@ def my_account():
 
     return render_template('my_account.html', user=user, history=history)
 
+# Purchase Page
+# -------------------------------------------------------------------------
 
 @app.route('/purchase/<int:car_id>', methods=['GET', 'POST'])
 def purchase(car_id):
@@ -246,11 +248,11 @@ def purchase(car_id):
         
         res_id = random.randint(10000, 99999) 
         
-        # FIX: Hardcoded payment_id to 1 (Matches John Doe in your data.sql)
+        # FIX: Hardcoded payment_id to 1 (Matches John Doe in our data.sql)
         payment_id = 1 
 
         try:
-            # FIX: Included payment_id in INSERT statement
+            # Insert reservation into the database
             cur.execute("""
                 INSERT INTO "Reservations" 
                 (reservation_id, user_id, car_id, pickup_location, dropoff_location, payment_id, pick_up_date, drop_off_date, total_cost, status)
