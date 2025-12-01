@@ -14,27 +14,6 @@
             color: white;
         }
 
-        /* Sidebar Styling */
-        .sidebar-link {
-            color: #ffc107; /* Gold text */
-            text-decoration: none;
-            display: block;
-            padding: 15px 0;
-            border-bottom: 1px solid #6c757d;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-        .sidebar-link:hover {
-            color: white;
-            padding-left: 10px; /* Slide effect on hover */
-        }
-        .sidebar-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: white;
-        }
-
         /* Content Box Styling */
         .content-box {
             background-color: #525252;
@@ -47,7 +26,22 @@
         /* Upcoming Reservation Box */
         .upcoming-box {
             border: 2px solid #ffc107; /* Gold border for emphasis */
-            background-color: #444; /* Slightly darker to stand out */
+            background-color: #444; 
+        }
+
+        /* Dashboard Cards for New Section */
+        .dashboard-card {
+            background-color: #3d3d3d;
+            border: 1px solid #6c757d;
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%;
+        }
+        .dashboard-card h5 {
+            color: #ffc107;
+            border-bottom: 1px solid #6c757d;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         /* Buttons in the Upcoming Box */
@@ -89,6 +83,7 @@
 <body class="background-container">
 
     <div class="d-flex align-items-center position-fixed w-100" style="top: 30px; z-index: 10;">
+        
         <div class="d-flex position-absolute justify-content-center w-50" style="right:0; left:0; margin:auto"> 
             <div class="p-3">
                 <div class="position-relative py-2 px-4 text-bg-secondary border border-secondary rounded-pill" style="--bs-bg-opacity:.55;">
@@ -101,131 +96,166 @@
                 </div>
             </div>
         </div>
+
+        <div class="d-flex position-absolute p-3" style="right: 20px;">
+            <a href="{{ url_for('home') }}" class="btn btn-danger fw-bold">
+                Log Out
+            </a>
+        </div>
     </div>
 
     <div class="container-fluid" style="margin-top: 150px; padding-bottom: 50px;">
-        <div class="row justify-content-center">
+        <div class="col-md-10 mx-auto">
             
-            <div class="col-md-3 mb-4">
-                <div class="content-box h-100">
-                    <div class="sidebar-title">My Rental Hub</div>
-                    
-                    <a href="#" class="sidebar-link"> <span class="me-2">::</span> Dashboard ></a>
-                    <a href="#" class="sidebar-link">Profile & Contact ></a>
-                    <a href="#" class="sidebar-link">Payment Methods ></a>
-                    <a href="#" class="sidebar-link">Rewards & Loyalty ></a>
-                    <a href="#" class="sidebar-link" style="border-bottom: none;">Settings & Preferences ></a>
-                    
-                    <hr class="my-4" style="border-color: white;">
-                    
-                    <a href="{{ url_for('home') }}" class="btn btn-outline-light w-100 py-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                          <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                        </svg>
-                        Log Out
-                    </a>
-                </div>
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-5">My Account</h2>
+                <h4 class="text-warning">Welcome back, {{ user.first_name }}!</h4>
             </div>
 
-            <div class="col-md-8">
-                
-                <div class="text-center mb-4">
-                    <h2 class="fw-bold display-5">My Account</h2>
-                    <h4 class="text-warning">Welcome back, {{ user.first_name }}!</h4>
-                    <p class="text-light">Here's a quick overview of your upcoming rentals and history.</p>
-                </div>
-
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="alert alert-success" role="alert">
-                            {{ messages[0] }}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-
-                {% set upcoming = namespace(found=false) %}
-                {% for item in history %}
-                    {% if item.status == 'confirmed' and not upcoming.found %}
-                        {% set upcoming.found = true %}
-                        
-                        <div class="content-box upcoming-box text-start">
-                            <h4 class="border-bottom border-warning pb-2 mb-3">Your Upcoming Reservation</h4>
-                            
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h3 class="fw-bold mb-3">{{ item.car }}</h3>
-                                    
-                                    <p class="mb-1"><strong>Pick-up:</strong> {{ item.date }}</p>
-                                    <p class="mb-1"><strong>Total Cost:</strong> ${{ item.cost }}</p>
-                                    <p class="text-success fw-bold">Status: Confirmed</p>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
-                                        <button type="submit" class="action-btn cancel-btn" onclick="return confirm('Cancel this reservation?');">Cancel</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-
-                {% if not upcoming.found %}
-                    <div class="content-box text-center py-4">
-                        <h4 class="text-muted">No Upcoming Reservations</h4>
-                        <a href="{{ url_for('locations') }}" class="btn btn-warning mt-2">Book a Car Now</a>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{ messages[0] }}
                     </div>
                 {% endif %}
+            {% endwith %}
 
-
-                <div class="content-box text-start">
-                    <h4 class="border-bottom border-secondary pb-2 mb-3">Past Reservations</h4>
+            {% set upcoming = namespace(found=false) %}
+            {% for item in history %}
+                {% if item.status == 'confirmed' and not upcoming.found %}
+                    {% set upcoming.found = true %}
                     
-                    {% if history %}
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th class="text-warning">Date</th>
-                                        <th class="text-warning">Vehicle</th>
-                                        <th class="text-warning">Cost</th>
-                                        <th class="text-warning">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in history %}
-                                    <tr>
-                                        <td>{{ item.date }}</td>
-                                        <td>{{ item.car }}</td>
-                                        <td>${{ item.cost }}</td>
-                                        <td>
-                                            <span class="badge {% if item.status == 'confirmed' %}bg-success{% elif item.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                                {{ item.status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                    <div class="content-box upcoming-box text-start">
+                        <h4 class="border-bottom border-warning pb-2 mb-3">Your Upcoming Reservation</h4>
+                        
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3 class="fw-bold mb-3">{{ item.car }}</h3>
+                                <p class="mb-1"><strong>Pick-up:</strong> {{ item.date }}</p>
+                                <p class="mb-1"><strong>Total Cost:</strong> ${{ item.cost }}</p>
+                                <p class="text-success fw-bold">Status: Confirmed</p>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
+                                    <button type="submit" class="action-btn cancel-btn" onclick="return confirm('Cancel this reservation?');">Cancel</button>
+                                </form>
+                            </div>
                         </div>
-                    {% else %}
-                        <p>You have no reservation history.</p>
-                    {% endif %}
-                </div>
-
-                <div class="text-center account-footer mt-5">
-                    <div class="mb-3">
-                        <a href="{{ url_for('home') }}">Home</a> | 
-                        <a href="{{ url_for('locations') }}">Locations</a> | 
-                        <a href="{{ url_for('specials') }}">Specials</a> | 
-                        <a href="#">My Account</a> | 
-                        <a href="#">Manage Rentals</a>
                     </div>
-                    <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com <span class="ms-2">?</span></p>
+                {% endif %}
+            {% endfor %}
+
+            {% if not upcoming.found %}
+                <div class="content-box text-center py-4 mb-4">
+                    <h4 class="text-muted">No Upcoming Reservations</h4>
+                    <a href="{{ url_for('locations') }}" class="btn btn-warning mt-2">Book a Car Now</a>
+                </div>
+            {% endif %}
+
+            <div class="row mb-4">
+                
+                <div class="col-md-4 mb-3">
+                    <div class="dashboard-card text-start">
+                        <h5>Personal Details & Contact</h5>
+                        <form>
+                            <div class="mb-2">
+                                <label class="small text-muted">Full Name</label>
+                                <input type="text" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.first_name }} {{ user.last_name }}">
+                            </div>
+                            <div class="mb-2">
+                                <label class="small text-muted">Email</label>
+                                <input type="email" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.email }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-muted">Phone</label>
+                                <input type="text" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.phone }}">
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-warning w-100">Update Details</button>
+                        </form>
+                    </div>
                 </div>
 
+                <div class="col-md-4 mb-3">
+                    <div class="dashboard-card text-center d-flex flex-column justify-content-center">
+                        <h5>Rewards & Loyalty</h5>
+                        <div class="my-3">
+                            <h1 class="display-4 text-warning fw-bold">1,250</h1>
+                            <p class="text-white">R&R Points Available</p>
+                        </div>
+                        <div class="badge bg-warning text-dark fs-6 mb-3 mx-auto" style="width: fit-content;">Gold Member</div>
+                        <button class="btn btn-sm btn-outline-light">Redeem Points</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="dashboard-card text-start">
+                        <h5>Payment Methods</h5>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3 p-2 rounded" style="background-color: #525252;">
+                            <div>
+                                <span class="fw-bold">VISA</span> <small>**** 4242</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem;">Remove</button>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4 p-2 rounded" style="background-color: #525252;">
+                            <div>
+                                <span class="fw-bold">MC</span> <small>**** 8899</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem;">Remove</button>
+                        </div>
+
+                        <button class="btn btn-sm btn-primary w-100">+ Add New Card</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="content-box text-start">
+                <h4 class="border-bottom border-secondary pb-2 mb-3">Past Reservations</h4>
+                
+                {% if history %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-warning">Date</th>
+                                    <th class="text-warning">Vehicle</th>
+                                    <th class="text-warning">Cost</th>
+                                    <th class="text-warning">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in history %}
+                                <tr>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.car }}</td>
+                                    <td>${{ item.cost }}</td>
+                                    <td>
+                                        <span class="badge {% if item.status == 'confirmed' %}bg-success{% elif item.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ item.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>You have no reservation history.</p>
+                {% endif %}
+            </div>
+
+            <div class="text-center account-footer mt-5">
+                <div class="mb-3">
+                    <a href="{{ url_for('home') }}">Home</a> | 
+                    <a href="{{ url_for('locations') }}">Locations</a> | 
+                    <a href="{{ url_for('specials') }}">Specials</a> | 
+                    <a href="#">My Account</a>
+                </div>
+                <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com <span class="ms-2">?</span></p>
+            </div>
+
         </div>
     </div>
     
