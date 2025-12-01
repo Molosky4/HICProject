@@ -99,8 +99,8 @@
                 <div class="d-flex flex-row justify-content-between gap-3 mx-5">
                     <div class="mx-3">
                         <h4 class="fs-1">Don't know what you want?</h4>
-                        <p>Our catalog is sure to have something for every occasion. Finding a car has never been easier!</p>
-                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('search_cars') }}'">Find it Here</button>
+                        <p>Our catalog is sure to have something for every occasion. Finding a car has never been easier!</p> 
+                        <button class="btn btn-primary" style="font-size: 1.2rem" onclick="window.location.href='{{ url_for('cars_at_location', location_id=0) }}'">Find it Here</button>
                     </div>
                     <div class="mx-5">
                         <h4 class="fs-1">Want to see where we are?</h4>

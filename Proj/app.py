@@ -68,12 +68,20 @@ def cars_at_location(location_id):
     conn = get_connection()
     cur = conn.cursor()
 
-    # Use lowercase table and column names; mpg and is_a_special are lowercase
-    cur.execute("""
-        SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
-        FROM \"Cars\"
-        WHERE location_id = %s;
-    """, (location_id,))
+    if location_id == 0:
+        # Fetch all cars (no filter on location)
+        cur.execute("""
+            SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
+            FROM "Cars";
+        """)
+    else:
+        # Otherwise, filter by location_id
+        cur.execute("""
+            SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
+            FROM "Cars"
+            WHERE location_id = %s;
+        """, (location_id,))
+
 
     cars = cur.fetchall()
 
@@ -94,14 +102,23 @@ def search_cars():
     query = request.args.get('q', '').lower()
     location_id = request.args.get('location_id')
 
+    # Get database connection
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
-        FROM \"Cars\"
-        WHERE location_id = %s;
-    """, (location_id,))
+    # Build query dynamically
+    if location_id is "0": #only activates when clicking 'find it here' via homescreen
+        cur.execute("""
+            SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
+            FROM "Cars";
+        """)
+    else:
+        # Filter by location_id
+        cur.execute("""
+            SELECT car_id, make, model, year, daily_rate, transmission, seats, "MPG", is_a_special, status
+            FROM "Cars"
+            WHERE location_id = %s;
+        """, (location_id,))
 
     cars = cur.fetchall()
     cur.close()
