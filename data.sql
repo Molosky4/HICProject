@@ -22,7 +22,7 @@ VALUES
 -- Insert Users
 INSERT INTO "Users" ("user_id", "full_name", "email", "password_hash", "phone_number")
 VALUES
-(1, 'John Doe', 'john@example.com', 'hashedpassword1', '555-111-2222'),
+(1, 'John Doe', 'john@example.com', 'scrypt:32768:8:', '555-111-2222'),
 (2, 'Jane Smith', 'jane@example.com', 'hashedpassword2', '555-333-4444');
 
 -- Insert Addresses
