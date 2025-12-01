@@ -86,26 +86,32 @@
             <div class="row mb-4">
                 
                 <div class="col-md-6 mb-3">
-                    <div class="dashboard-card text-start">
-                        <h5>Personal Details & Contact</h5>
-                        <form action="#" method="POST"> 
-                            <div class="mb-2">
-                                <label class="small text-muted">First Name</label>
-                                <input type="text" name="first_name" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.first_name }}">
+                    <div class="dashboard-card text-start" style="border: 1px solid #ffc107;">
+                        <h5 class="fw-bold text-white border-bottom border-warning pb-2">Edit Personal Details</h5>
+                        
+                        <form action="#" method="POST">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label class="form-label text-warning small mb-1">First Name</label>
+                                    <input type="text" name="first_name" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.first_name }}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-warning small mb-1">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.last_name }}">
+                                </div>
                             </div>
+                            
                             <div class="mb-2">
-                                <label class="small text-muted">Last Name</label>
-                                <input type="text" name="last_name" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.last_name }}">
+                                <label class="form-label text-warning small mb-1">Email Address</label>
+                                <input type="email" name="email" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.email }}">
                             </div>
-                            <div class="mb-2">
-                                <label class="small text-muted">Email</label>
-                                <input type="email" name="email" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.email }}">
-                            </div>
+                            
                             <div class="mb-3">
-                                <label class="small text-muted">Phone</label>
-                                <input type="text" name="phone" class="form-control form-control-sm bg-secondary text-white border-0" value="{{ user.phone }}">
+                                <label class="form-label text-warning small mb-1">Phone Number</label>
+                                <input type="text" name="phone" class="form-control form-control-sm bg-dark text-white border-warning" value="{{ user.phone }}">
                             </div>
-                            <button type="submit" class="btn btn-sm btn-outline-warning w-100">Update Details</button>
+                            
+                            <button type="submit" class="btn btn-warning w-100 fw-bold text-dark">Save Changes</button>
                         </form>
                     </div>
                 </div>
@@ -163,12 +169,6 @@
             </div>
 
             <div class="text-center account-footer mt-5">
-                <div class="mb-3">
-                    <a href="{{ url_for('home') }}">Home</a> | 
-                    <a href="{{ url_for('locations') }}">Locations</a> | 
-                    <a href="{{ url_for('specials') }}">Specials</a> | 
-                    <a href="#">My Account</a>
-                </div>
                 <p class="fw-bold text-white">Need help? Contact 1-800-R&R-CAR | support@rentandroam.com</p>
             </div>
 
