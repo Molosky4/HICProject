@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modify Reservation</title>
+  <link rel="stylesheet" href="../static/css/bootstrap.css">
+  <link rel="stylesheet" href="../static/css/customCss.css">
+</head>
+<body class="background-container">
+  <div class="container-fluid" style="margin-top:10vh;">
+    <div class="d-flex justify-content-center">
+      <div class="col-10 p-4 rounded" style="background-color:#525252; color: #fff;">
+        <h3 class="mb-4">MODIFY RESERVATION #{{ res.code }}</h3>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for cat, msg in messages %}
+              <div class="alert alert-{{ 'success' if cat=='success' else 'danger' }}">{{ msg }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Current Reservation Details -->
+        <div class="card mb-3 text-start">
+          <div class="card-body" style="background: #3e3e3e; color: #fff;">
+            <h5 class="mb-3">Current Reservation Details</h5>
+            <p><strong>Reservation ID:</strong> {{ res.code }}</p>
+            <p><strong>Pick-up Location:</strong> {{ res.pickup_location }}</p>
+            <p><strong>Drop-off Location:</strong> {{ res.dropoff_location }}</p>
+            <p><strong>Pick-up & Drop-off Date:</strong> {{ res.pick_up_date }} — {{ res.drop_off_date }}</p>
+            <p><strong>Car ID:</strong> {{ res.car_id }}  <strong>Cost:</strong> ${{ '%.2f'|format(res.total_cost) }}</p>
+            <p><strong>Status:</strong> <i>{{ res.status }}</i></p>
+          </div>
+        </div>
+
+        <!-- Modification Form -->
+        <div class="card text-start">
+          <div class="card-body" style="background: #3e3e3e; color: #fff;">
+            <h5 class="mb-3">Update Reservation</h5>
+            <form method="post" action="{{ url_for('modify_reservation', reservation_id=res.id) }}" id="modifyForm">
+              
+              <div class="mb-3">
+                <label for="car_id" class="form-label">Car</label>
+                <select class="form-select" name="car_id" id="car_id" required>
+                  {% for c in cars %}
+                    <option value="{{ c[0] }}" data-rate="{{ c[4] }}" {% if c[0] == res.car_id %}selected{% endif %}>
+                      {{ c[1] }} {{ c[2] }} ({{ c[3] }}) - ${{ '%.2f'|format(c[4]) }} /day
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="pick_up_date" class="form-label">Pick-up Date</label>
+                  <input class="form-control" type="date" name="pick_up_date" id="pick_up_date" value="{{ res.pick_up_date }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="drop_off_date" class="form-label">Drop-off Date</label>
+                  <input class="form-control" type="date" name="drop_off_date" id="drop_off_date" value="{{ res.drop_off_date }}" required>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="pickup_location" class="form-label">Pickup Location</label>
+                  <select class="form-select" name="pickup_location" id="pickup_location" required>
+                    {% for L in locations %}
+                      <option value="{{ L[0] }}" {% if L[0] == res.pickup_location %}selected{% endif %}>{{ L[1] }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="dropoff_location" class="form-label">Dropoff Location</label>
+                  <select class="form-select" name="dropoff_location" id="dropoff_location" required>
+                    {% for L in locations %}
+                      <option value="{{ L[0] }}" {% if L[0] == res.dropoff_location %}selected{% endif %}>{{ L[1] }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="payment_id" class="form-label">Payment Method</label>
+                <select class="form-select" name="payment_id" id="payment_id">
+                  <option value="">-- choose --</option>
+                  {% for p in payments %}
+                    <option value="{{ p[0] }}" {% if p[0] == res.payment_id %}selected{% endif %}>{{ p[1] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Display Estimated Cost -->
+              <div class="alert alert-info mb-3">
+                <strong>Estimated Total Cost:</strong> $<span id="estimatedCost">{{ '%.2f'|format(res.total_cost) }}</span>
+              </div>
+
+              <div class="mt-2">
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+                <a class="btn btn-secondary" href="{{ url_for('manage_reservations') }}">Back</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Calculate cost dynamically when dates or car changes
+    function updateEstimatedCost() {
+      const carSelect = document.getElementById('car_id');
+      const pickupDate = document.getElementById('pick_up_date').value;
+      const dropoffDate = document.getElementById('drop_off_date').value;
+      
+      if (carSelect.selectedIndex >= 0 && pickupDate && dropoffDate) {
+        const dailyRate = parseFloat(carSelect.options[carSelect.selectedIndex].dataset.rate);
+        const pickup = new Date(pickupDate);
+        const dropoff = new Date(dropoffDate);
+        
+        // Calculate number of days
+        const timeDiff = dropoff - pickup;
+        const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        
+        if (days > 0) {
+          const totalCost = days * dailyRate;
+          document.getElementById('estimatedCost').textContent = totalCost.toFixed(2);
+        }
+      }
+    }
+
+    // Add event listeners
+    document.getElementById('car_id').addEventListener('change', updateEstimatedCost);
+    document.getElementById('pick_up_date').addEventListener('change', updateEstimatedCost);
+    document.getElementById('drop_off_date').addEventListener('change', updateEstimatedCost);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
