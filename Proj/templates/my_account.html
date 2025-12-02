@@ -62,7 +62,7 @@
                             </div>
                             
                             <div class="col-md-4 text-end">
-                                <form action="{{ url_for('cancel_reservation', reservation_id=item.id) }}" method="POST">
+                                <form action="{{ url_for('cancel_reservation', reservation_id=item.reservation_id) }}" method="POST">
                                     <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Cancel this reservation?');">Cancel Reservation</button>
                                 </form>
                             </div>
@@ -145,9 +145,9 @@
                             <tbody>
                                 {% for item in history %}
                                 <tr>
-                                    <td>{{ item.date }}</td>
-                                    <td>{{ item.car }}</td>
-                                    <td>${{ item.cost }}</td>
+                                    <td>{{ item.pick_up_date }}</td>
+                                    <td>{{ item.car_name }}</td>
+                                    <td>${{ item.total_cost }}</td>
                                     <td>
                                         <span class="badge {% if item.status == 'confirmed' %}bg-success{% elif item.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
                                             {{ item.status }}

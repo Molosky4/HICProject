@@ -148,7 +148,7 @@ def locations():
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT location_id, name, street, city, image, open_time, close_time, days_open FROM \"Locations\";")
+    cur.execute("SELECT location_id, name, street, city, image_file, opens, closes, days_open FROM \"Locations\";")
     rows = cur.fetchall()
 
     cur.close()
@@ -170,7 +170,7 @@ def search_locations():
     conn = get_connection()
     cur = conn.cursor()
     
-    cur.execute("SELECT location_id, name, street, city, image, open_time, close_time, days_open FROM \"Locations\";")
+    cur.execute("SELECT location_id, name, street, city, image_file, opens, closes, days_open FROM \"Locations\";")
     rows = cur.fetchall()
 
     cur.close()
@@ -317,7 +317,7 @@ def my_account():
         ORDER BY r.pick_up_date DESC
     """
     cur.execute(history_query, (user_id,))
-    cur.execute(history_query, (CURRENT_USER_ID,))
+    # cur.execute(history_query, (CURRENT_USER_ID,))
     history_rows = cur.fetchall()
 
     cur.close()
@@ -586,7 +586,7 @@ def reserve():
                 return redirect(url_for('reserve'))
 
         # GET request: show the reservation form
-        return render_template('reserve.html')  # ✅ Must return something
+        return render_template('reserve.html')  # Must return something
 
     except Exception as e:
         conn.rollback()
@@ -619,7 +619,7 @@ def cancel_reservation(reservation_id):
         UPDATE "Reservations" 
         SET status = 'cancelled' 
         WHERE reservation_id = %s AND user_id = %s
-    """, (reservation_id, CURRENT_USER_ID))
+    """, (reservation_id, session.get('user_id')))
     
     conn.commit()
     cur.close()
